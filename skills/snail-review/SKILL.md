@@ -105,6 +105,21 @@ Examples (tone only):
 - L52-71: ✂️ cut: retry wrapper around an idempotent local call. Remove wrapper.
 ```
 
+The block above is the subagent contract. When the orchestrator reports `valid` findings to the user (local report and `4 - REVIEW.yaml`), re-group them by file for readability — bare file path on its own line, findings as `- ` bullets beneath it, groups and findings sorted file → line ascending, a blank line between groups and before `totals:`:
+
+```text
+### Review Findings
+
+<file path>
+- L<line> <emoji> <tag>: <problem>. <fix>.
+- L<start>-<end> <emoji> <tag>: <problem>. <fix>.
+
+<another file path>
+- L<line> <emoji> <tag>: <problem>. <fix>.
+
+totals: N🔴 N🟡 N✂️ N🪵 N⚡ N🔵 N❓ | net: -<N> lines possible
+```
+
 ## Clean-code criteria
 
 Report only concrete violations introduced or exposed by the diff:
@@ -208,8 +223,9 @@ Post only when the user passed a PR link/number or explicitly asked (e.g. `/snai
 Everything posted to the PR is short, clear, concise, and human-readable - write like a person reviewing a colleague's PR.
 
 - One or two plain sentences per comment: the problem, then the fix.
+- Kind, not kiss-ass: critique the code, not the author; no scolding, no praise padding.
 - No emoji tags, totals, or report scaffolding in PR comments; those stay in the local findings block and `4 - REVIEW.yaml`.
-- No filler, no praise padding, no restating the code back to the author.
+- No filler, no restating the code back to the author.
 - `❓` findings become plain questions to the author; when one stems from an intent source, include the quoted source line.
 
 ## Rules

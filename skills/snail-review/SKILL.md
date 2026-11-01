@@ -1,6 +1,6 @@
 ---
 name: snail-review
-description: Code review of a diff, read-only by default or fix mode on explicit request. Default is one-shot and read-only, posted as inline PR comments only when a PR link is given or asked for. Fix mode loops review, triage, fix, re-review until clean, and only runs when the user explicitly asks for fixes or snail-flow step 9 calls it. Use when the user asks for snail-review, a review, or review and fix.
+description: Code review of a diff, read-only by default or fix mode on explicit request. Default is one-shot and read-only, posted as inline PR comments only when a PR link is given or asked for. Fix mode opens with three parallel reviewers, then loops triage, fix, re-review until clean, and only runs when the user explicitly asks for fixes or snail-flow step 9 calls it. Use when the user asks for snail-review, a review, or review and fix.
 ---
 
 # Review
@@ -8,7 +8,7 @@ description: Code review of a diff, read-only by default or fix mode on explicit
 Diff review in two modes. The orchestrating agent runs the reviewer subagents and, in both modes, triages their findings itself: only `valid` ones are reported or fixed.
 
 - **Read-only (default):** run three parallel `readonly` `general-purpose` Task subagents on the same diff, triage, deliver the `valid` findings. Do not fix or loop.
-- **Fix mode:** only when the user explicitly asks to fix (`snail-review fix`, `review and fix`, "fix the findings") or `snail-flow` step 9 explicitly calls it. Loop **review → triage → fix → re-review** until the latest pass has zero valid findings.
+- **Fix mode:** only when the user explicitly asks to fix (`snail-review fix`, `review and fix`, "fix the findings") or `snail-flow` step 9 explicitly calls it. Pass one runs the same three parallel reviewers as read-only mode; when `valid` findings remain, loop **fix → re-review** with one reviewer per pass until a pass has zero `valid` findings after triage.
 
 Never infer fix mode. When unsure, stay read-only. A PR link or an outside contributor's PR never switches to fix mode.
 
@@ -156,7 +156,7 @@ If the diff is empty, reply with `AI review. harness: <harness>, model: <model>`
 If the diff is empty, stop in one sentence. The disclosure header goes on the final report and `4 - REVIEW.yaml`.
 
 1. **Trace context** — run the context trail once; carry the intent sources block into every pass.
-2. **Review** — dispatch ONE new `readonly` `general-purpose` Task subagent with the prompt above, on the current tree; tell it to review the same diff target as pass one including fixes made since (branch changes: merge base to working tree; uncommitted changes: the HEAD from pass one to working tree), so uncommitted fixes count.
+2. **Review** — pass one: dispatch three reviewers exactly as read-only mode step 3 (one message, same prompt, three models when the harness supports overrides). Later passes: dispatch ONE new `readonly` `general-purpose` Task subagent with the prompt above, on the current tree; tell it to review the same diff target as pass one including fixes made since (branch changes: merge base to working tree; uncommitted changes: the HEAD from pass one to working tree), so uncommitted fixes count.
 3. **Triage** — as above.
 4. **Fix** — resolve every `valid` finding before the next review. Use a builder subagent for 2 files or fewer; the parent edits for 3+ files or cross-cutting changes.
 5. **Repeat** — dispatch a new subagent on the current tree. Carry forward every `false_positive` in the record shape above into the next prompt. Continue until the latest pass has zero `valid` findings after triage.

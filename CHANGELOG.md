@@ -2,6 +2,12 @@
 
 All notable user-facing changes to snail are documented in this file.
 
+## [0.0.4] - 2026-11-01
+
+### Changed
+
+- `snail-review`: fix mode now opens with the same three parallel reviewers as read-only mode, then loops single-reviewer re-reviews only while `valid` findings remain - one reviewer can miss what another catches.
+
 ## [0.0.3] - 2026-11-01
 
 ### Security

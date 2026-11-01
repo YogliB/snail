@@ -105,7 +105,7 @@ Examples (tone only):
 - L52-71: ✂️ cut: retry wrapper around an idempotent local call. Remove wrapper.
 ```
 
-The block above is the subagent contract. When the orchestrator reports `valid` findings to the user (local report and `4 - REVIEW.yaml`), re-group them by file for readability — bare file path on its own line, findings as `- ` bullets beneath it, groups and findings sorted file → line ascending, a blank line between groups and before `totals:`:
+The block above is the subagent contract. When the orchestrator reports `valid` findings to the user (local report and `4 - REVIEW.yaml`), re-group them by file for readability — bare file path on its own line, findings as `- ` bullets beneath it, groups and findings sorted file → line ascending, a blank line between groups and before `totals:`. Findings not tied to a file go under a `general` group, listed last:
 
 ```text
 ### Review Findings

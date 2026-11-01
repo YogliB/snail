@@ -2,6 +2,12 @@
 
 All notable user-facing changes to snail are documented in this file.
 
+## [0.0.3] - 2026-11-01
+
+### Security
+
+- Bump `js-yaml` to 4.3.2 and re-vendor the copies shipped inside `snail-flow`, `snail-implement`, and `snail-planning` (Dependabot alerts for prototype pollution).
+
 ## [0.0.2] - 2026-11-01
 
 ### Changed

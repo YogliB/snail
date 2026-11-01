@@ -2,6 +2,13 @@
 
 All notable user-facing changes to snail are documented in this file.
 
+## [0.0.2] - 2026-11-01
+
+### Changed
+
+- `snail-review`: PR comments are now explicitly kind and direct - critique the code, not the author; no scolding, no praise padding.
+- `snail-review`: `valid` findings in the local report and `4 - REVIEW.yaml` are grouped by file for readability; the subagent contract keeps the flat `section:line` format.
+
 ## [0.0.1] - 2026-10-30
 
 First release of snail.

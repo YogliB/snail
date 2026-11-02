@@ -1,5 +1,6 @@
 ---
 name: snail-review
+argument-hint: '[read-only|fix]'
 description: Code review of a diff, read-only by default or fix mode on explicit request. Default is one-shot and read-only, posted as inline PR comments only when a PR link is given or asked for. Fix mode opens with three parallel reviewers, then loops triage, fix, re-review until clean, and only runs when the user explicitly asks for fixes or snail-flow step 9 calls it. Use when the user asks for snail-review, a review, or review and fix.
 ---
 

@@ -2,6 +2,12 @@
 
 All notable user-facing changes to snail are documented in this file.
 
+## [0.0.5] - 2026-11-02
+
+### Added
+
+- `snail-review`: `argument-hint: [read-only|fix]` in the frontmatter, so invoking agents surface the two modes instead of defaulting silently to read-only.
+
 ## [0.0.4] - 2026-11-01
 
 ### Changed

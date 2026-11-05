@@ -7,7 +7,7 @@ description: Independent review of proposed alternatives before they are present
 
 Evaluate up to 3 proposed alternatives and flag low-quality options. Read-only unless the user explicitly asks the reviewer to rewrite.
 
-Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill.
+Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <finding> | <why dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
 
 ## When to use
 
@@ -47,7 +47,6 @@ AI review. harness: <harness>, model: <model>
 ### Alternatives Review Findings
 
 Lean & valid. Ship.
-verdict: pass
 ```
 
 ## Tags

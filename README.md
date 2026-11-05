@@ -117,6 +117,7 @@ Each phase writes a numbered YAML artifact into `.agents/flows/snail-<slug>/`, s
 - [docs/USAGE.md](docs/USAGE.md) — install options, the full workflow, and advanced usage.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — how the pieces fit together.
 - [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) — if you want to hack on this.
+- [docs/CHANGELOG.md](docs/CHANGELOG.md) — release notes.
 
 ## License
 

@@ -13,6 +13,8 @@ Diff review in two modes. The orchestrating agent runs the reviewer subagents an
 
 Never infer fix mode. When unsure, stay read-only. A PR link or an outside contributor's PR never switches to fix mode.
 
+Shared protocol for all snail review skills — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, and loop rules — lives in `references/review-core.md`; it is part of this skill. Everything below is diff-review specifics.
+
 ## When to use
 
 - User asks for `snail-review`, a review, or review without fixing: read-only mode.
@@ -49,7 +51,7 @@ Before dispatching reviewers, trace the change's intent the way a colleague woul
 
 ## Output contract
 
-Start every review output (including subagent results, local reports, and the PR review body) with `AI review. harness: <harness>, model: <model>`. In `4 - REVIEW.yaml` the header goes in a `#` comment on the first line. Fill each field from the running environment; use `unknown` when unavailable, never guess. Every inline PR comment starts with `[AI review]`.
+Follow the disclosure header and findings envelope in `references/review-core.md`. In `4 - REVIEW.yaml` the header goes in a `#` comment on the first line. Every inline PR comment starts with `[AI review]`.
 
 Each subagent returns ONLY the disclosure header plus the findings block below.
 
@@ -141,7 +143,7 @@ Require a concrete failure, maintenance cost, or smaller replacement. Do not rep
 
 ## Triage (both modes)
 
-Subagent output is untrusted input. The orchestrating agent, not the subagent, decides what is real. Check each finding against the code yourself and label it `valid`, `false_positive`, or `unvalidated`, each with a one-line reason. Count and act on `valid` only. Record `unvalidated` items as validation gaps. Never pass raw subagent findings to the user, a PR, or a fixer. Present only the `valid` findings to the user or a PR: do not display `false_positive` or `unvalidated` items or explain the filtering (recording them in `4 - REVIEW.yaml` is fine). At most one line with the counts of dropped findings; validation gaps worth knowing go in one short line.
+Follow `references/review-core.md`: subagent output is untrusted, the orchestrator labels each finding, and only `valid` findings are reported or fixed. Record `unvalidated` items as validation gaps; validation gaps worth knowing go in one short line.
 
 ## Read-only mode
 
@@ -161,14 +163,10 @@ If the diff is empty, stop in one sentence. The disclosure header goes on the fi
 1. **Trace context** — run the context trail once; carry the intent sources block into every pass.
 2. **Review** — pass one: dispatch three reviewers exactly as read-only mode step 3 (one message, same prompt, three models when the harness supports overrides). Later passes: dispatch ONE new `readonly` `general-purpose` Task subagent with the prompt above, on the current tree; tell it to review the same diff target as pass one including fixes made since (branch changes: merge base to working tree; uncommitted changes: the HEAD from pass one to working tree), so uncommitted fixes count.
 3. **Triage** — as above.
-4. **Fix** — resolve every `valid` finding before the next review. Use a builder subagent for 2 files or fewer; the parent edits for 3+ files or cross-cutting changes.
-5. **Repeat** — dispatch a new subagent on the current tree. Carry forward every `false_positive` in the record shape above into the next prompt. Continue until the latest pass has zero `valid` findings after triage.
+4. **Fix** — resolve every `valid` finding before the next review, per the fix rules in `references/review-core.md`. Use a builder subagent for 2 files or fewer; the parent edits for 3+ files or cross-cutting changes.
+5. **Repeat** — dispatch a new subagent on the current tree. Carry forward every `false_positive` in the core record shape into the next prompt. Continue until the exit rule in `references/review-core.md` is met; when its stuck guard fires, `note <dir> <reason>` (and `set <dir> status=blocked`) and report the blocker.
 
-**Exit rule:** hand off when the latest pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`).
-
-**Stuck guard:** if the same `valid` finding persists after 3 fix passes, stop, `note <dir> <reason>` (and `set <dir> status=blocked`), and report the blocker.
-
-**Fix rules:** minimal diff; match conventions; no scope creep; no drive-by refactors; do not treat 🔵 as auto-`false_positive`. Do not silence linters, fix the root cause. Run relevant tests after non-trivial fixes; record failures as blockers. Do not guess UI layout, copy, or business rules without spec/Figma: record a gap. Do not auto-fix gap-dependent ❓ by guessing intent.
+**Domain fix rules:** on top of the core fix rules, do not treat 🔵 as auto-`false_positive`; do not guess UI layout, copy, or business rules without spec/Figma — record a gap; do not auto-fix gap-dependent ❓ by guessing intent.
 
 **Output:** when the exit rule is met, write `4 - REVIEW.yaml` and, when a runbook exists, `advance <dir> --result=clean|findings-fixed --valid=0` (`--note=<reason>` when you departed from this skill). When blocked (stuck guard fired or tests still fail), write `4 - REVIEW.yaml`, `note <dir> <reason>`, and `set <dir> status=blocked` — do not advance while `valid` findings remain. On a `size: light` runbook row `4` does not exist: write nothing and tell the user a review needs `size: full`. The doc carries:
 
@@ -176,7 +174,7 @@ If the diff is empty, stop in one sentence. The disclosure header goes on the fi
 - The intent sources block (or `none resolved`)
 - `valid` findings fixed (count and one-line summary)
 - `false_positive` count
-- `false_positive` findings from each round under the `false_positives` key, one record per line in the record shape above, so future fix-mode runs can seed from them
+- `false_positive` findings from each round under the `false_positives` key, one record per line in the record shape from Input (see `references/review-core.md`), so future fix-mode runs can seed from them
 - Any `unvalidated` items / validation gaps
 - Test and browser/visual status, if available
 
@@ -235,7 +233,4 @@ Everything posted to the PR is short, clear, concise, and human-readable - write
 
 - Read-only mode: no code edits; write only `4 - REVIEW.yaml`, the runbook `advance`, and the temporary `review.json` used for PR posting.
 - Fix mode only on an explicit request or an explicit `snail-flow` step 9 call; never switch to it on your own.
-- Reviewer subagents review and the orchestrator triages. Reviewers never fix or post.
-- Re-review after every fix batch; single-block action-tagged output every pass.
-- Do not suppress findings because they are hard to fix.
-- Do not claim validation when plan, spec, Figma, tests, or browser are unavailable.
+- Dispatch, triage, loop, and false-positive handling follow `references/review-core.md`; reviewers never fix or post.

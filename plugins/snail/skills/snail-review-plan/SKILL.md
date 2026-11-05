@@ -7,6 +7,8 @@ description: Read-only review of a technical plan. Use when snail-planning has d
 
 Evaluate a technical plan before implementation. Flag correctness blockers, gaps, and unnecessary complexity.
 
+Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <finding> | <why dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
+
 ## When to use
 
 - After `snail-planning` writes a draft.
@@ -15,21 +17,25 @@ Evaluate a technical plan before implementation. Flag correctness blockers, gaps
 
 ## Input
 
-Paste the full plan text into the prompt. Do not point the subagent at plan files. Include repo constraints, user scope, masterplan ↔ sub-plan linkage (if split), and known validation gaps.
+Paste the full plan text into the prompt. Do not point the subagent at plan files. Include repo constraints, user scope, masterplan ↔ sub-plan linkage (if split), known validation gaps, and — on re-review passes — the false-positive records from earlier passes.
 
 ## Output contract
 
-Return ONLY the findings block. No prose intro.
+The reviewing agent returns ONLY the disclosure header plus this block. No prose intro.
 
 ```text
 Output ONLY in this format (no prose intro, no sections swapped).
 
+AI review. harness: <harness>, model: <model>
+
 ### Plan Review Findings
 
 section:line: <emoji> <tag>: <problem/over-engineering>. <fix/replacement>.
-totals: N🔴 N🟡 N✂️ N🪵 N⚡ N🔵 N❓ | net: -<N> lines/steps possible
+totals: N🔴 N🟡 N✂️ N🪵 N⚡ N📖 N🔵 N❓ | net: -<N> lines/steps possible
 
 Or exactly when no findings:
+
+AI review. harness: <harness>, model: <model>
 
 ### Plan Review Findings
 
@@ -45,24 +51,12 @@ Rules for Plan Review Findings:
   - ✂️ cut: redundant prose, duplicate information, speculative task not required for goal (replacement: nothing)
   - 🪵 yagni: over-engineered scaffolding, premature generalization, unnecessary abstraction (replacement: inline or drop)
   - ⚡ simplify: over-complicated sequencing, multi-tier nesting, complex pattern (replacement: simpler layout or step)
+  - 📖 read: dense YAML, magic values, or packed conditions a reader must stop to decode (replacement: plainer equivalent)
   - 🔵 nit: wording, formatting, minor presentation tweak
   - ❓ question: unclear intent, missing context, needs author clarification
 - Focus: self-containment, executability, TODO atomicity/testability, scope/acceptance alignment, missing files/dependencies, contradictions, realistic sequencing, untestable verification, risks without mitigation, Complexity Check accuracy, masterplan ↔ sub-plan consistency, and ponytail complexity reduction. Do NOT perform pure micro prose edits unless they reduce scope, file count, or steps.
-
-End with exactly one line:
-- totals: N🔴 N🟡 N✂️ N🪵 N⚡ N🔵 N❓ | net: -<N> lines/steps possible
-- Or: Lean & valid. Ship.
+- Do not re-report a finding carried forward as a false positive while its recorded reason still holds; report it when the reason no longer applies or it appears elsewhere — note the changed premise.
 ```
-
-## Tags
-
-- `🔴 bug`: correctness blocker, contradiction, broken logic, missing critical step
-- `🟡 gap`: weak testability, missing file/dependency, unclear sequencing, unmitigated risk
-- `✂️ cut`: redundant prose, duplicate information, speculative task not required for goal
-- `🪵 yagni`: over-engineered scaffolding, premature generalization, unnecessary abstraction
-- `⚡ simplify`: over-complicated sequencing, multi-tier nesting, complex pattern
-- `🔵 nit`: wording, formatting, minor presentation tweak
-- `❓ question`: unclear intent, missing context, needs author clarification
 
 ## Review criteria
 
@@ -81,13 +75,11 @@ End with exactly one line:
 
 ## Triage
 
-Label each finding `valid`, `false_positive`, or `unvalidated` with a one-line reason. If zero `valid` findings remain, output exactly `Lean & valid. Ship.`.
+Follow `../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean.
 
 ## Rules
 
 - Read-only: do not edit the plan or any repo files.
 - Single block: emit exactly one `### Plan Review Findings` block.
-- Sort findings by section, then line.
-- One finding per line; problem then fix, separated by ". ".
 - Do not add new sections or rewrite the plan.
 - Minor wording issues are not findings unless they mislead.

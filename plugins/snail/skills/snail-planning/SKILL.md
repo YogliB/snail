@@ -82,14 +82,12 @@ The `complexity_check` fields `cross_deps` and total counts inform a `proceed` o
 
 ## Plan review loop (mandatory)
 
-After the plan matches the template and the pre-finalization pass is done, review every emitted document until the latest pass has zero `valid` findings.
+After the plan matches the template and the pre-finalization pass is done, review every emitted document until the latest pass has zero `valid` findings. Dispatch, triage, false-positive carry-forward, exit rule, and stuck guard follow `../snail-review/references/review-core.md`.
 
 1. **Review** — dispatch a new `readonly` `general-purpose` Task subagent and run the `snail-review-plan` skill on the full plan text (paste the plan; do not point at files).
-2. **Triage** — label each finding `valid`, `false_positive`, or `unvalidated` with a one-line reason.
-3. **Fix** — resolve every `valid` finding before the next review. Prefer minimal edits.
-4. **Repeat** — dispatch a new subagent on the updated plan. Continue until the latest pass is clean.
-
-**Exit rule:** hand off when the latest pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`).
+2. **Triage** — label each finding `valid`, `false_positive`, or `unvalidated` with a one-line reason; act on `valid` only.
+3. **Fix** — resolve every `valid` finding before the next review. Prefer minimal edits; fix root causes.
+4. **Repeat** — dispatch a new subagent on the updated plan, carrying forward the false-positive records from earlier passes, until the core exit rule is met.
 
 ## Delivery notes
 

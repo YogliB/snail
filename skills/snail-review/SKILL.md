@@ -65,7 +65,7 @@ Known validation gaps: <only when context/capability missing — list each; do n
 Intent sources: <from the context trail, one line per source; "none resolved" when empty>
 False positives from previous reviews: <fix mode only, when earlier passes produced some; one per line as `file:line | tag | original finding | why it was dismissed`. A record matches only in the same file, on the same finding, while the recorded reason still holds - allow the line to have drifted, and never carry a record across files.>
 
-Run the diff yourself (e.g. git diff <base>...<head> or git diff for uncommitted). Read changed files, relevant callers, callees, tests, contracts, and existing helpers. Check duplication, cohesion, coupling, control flow, abstraction, naming, data modeling, repository consistency, and change impact.
+Run the diff yourself (e.g. git diff <base>...<head> or git diff for uncommitted). Read changed files, relevant callers, callees, tests, contracts, and existing helpers. Check duplication, cohesion, coupling, control flow, abstraction, naming, readability, data modeling, repository consistency, and change impact.
 
 Output ONLY in this format (no prose intro, no sections swapped). Fill the header from your running environment; use `unknown` for unavailable fields, never guess.
 
@@ -131,6 +131,7 @@ Report only concrete violations introduced or exposed by the diff:
 - **Control flow**: nesting, branching, or state transitions obscure behavior.
 - **Abstraction**: wrappers or interfaces add indirection without removing duplication or isolating volatility.
 - **Naming**: names misrepresent behavior, units, ownership, or side effects.
+- **Readability**: magic values, packed conditions, or clever idioms a competent reader must stop to decode, where a plainer equivalent exists.
 - **Data modeling**: invalid states are easy to construct or related values travel separately.
 - **Repository consistency**: the change bypasses an existing helper or established local pattern.
 - **Change impact**: inspect affected callers, callees, tests, and contracts outside the diff.

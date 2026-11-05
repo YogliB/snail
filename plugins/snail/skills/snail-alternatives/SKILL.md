@@ -18,9 +18,9 @@ This skill can run on its own; it still maintains the flow folder and runbook wh
 
 1. **Identify** — up to 3 distinct approaches. If only one is viable, document that in `1 - ALTERNATIVES.yaml` and still produce the file.
 2. **Present** — for each option: idea, snippet (if relevant), pros, cons.
-3. **Review** — run the `snail-review-alternatives` skill at least once. Do not self-review or skip this step. Triage each finding `valid`, `false_positive`, or `unvalidated`; resolve every `valid` finding and re-review. Continue until the latest `snail-review-alternatives` pass has zero `valid` findings after triage.
+3. **Review** — dispatch a `readonly` `general-purpose` Task subagent and run the `snail-review-alternatives` skill on the options text (paste the options; do not point at files). Do not self-review or skip this step. Triage each finding per `../snail-review/references/review-core.md` — act on `valid` only and carry false-positive records into the next pass. Resolve every `valid` finding and re-review. Continue until the latest pass has zero `valid` findings after triage.
 
-    **Exit rule:** stop when the latest `snail-review-alternatives` pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`).
+    **Exit rule:** stop when the latest `snail-review-alternatives` pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`). **Stuck guard:** if the same `valid` finding persists after 3 passes, stop and report the blocker.
 
 4. **Recommend** — one clear choice based on clarity and maintainability.
 5. **Write** — save options, review findings (with triage counts), recommendation, and decision to `1 - ALTERNATIVES.yaml`.
@@ -38,26 +38,7 @@ This skill can run on its own; it still maintains the flow folder and runbook wh
 
 ## Alternatives review contract
 
-The `snail-review-alternatives` skill returns ONLY:
-
-```text
-### Alternatives Review Findings
-
-option:<n>: <tag>: <problem>. <fix>
-totals: N irrelevant N duplicate N weak N strawman N missing-context N unjustified | verdict: pass / needs-revision
-```
-
-Or, when no findings:
-
-```text
-### Alternatives Review Findings
-
-Lean & valid. Ship.
-```
-
-Tags: `irrelevant`, `duplicate`, `weak`, `strawman`, `missing-context`, `unjustified`.
-
-Triage each finding as `valid`, `false_positive`, or `unvalidated`. Fix `valid` issues once, then re-review.
+`snail-review-alternatives` returns the disclosure header plus one `### Alternatives Review Findings` block — `option:<n>: <tag>: <problem>. <fix>` lines, a `totals:` line ending in `verdict: pass / needs-revision`, or `Lean & valid. Ship.` when clean. Tags: `irrelevant`, `duplicate`, `weak`, `strawman`, `missing-context`, `unjustified`. Full contract and triage rules: the skill file plus `../snail-review/references/review-core.md`.
 
 ## Example
 

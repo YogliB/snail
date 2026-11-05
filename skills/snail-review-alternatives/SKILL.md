@@ -7,6 +7,8 @@ description: Independent review of proposed alternatives before they are present
 
 Evaluate up to 3 proposed alternatives and flag low-quality options. Read-only unless the user explicitly asks the reviewer to rewrite.
 
+Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill.
+
 ## When to use
 
 - After `snail-alternatives` generates options.
@@ -22,11 +24,15 @@ For each option:
 - **Pros / Cons**: brief, balanced assessment
 - **Recommendation** (if present): author's preferred option and why
 
+On re-review passes, include the false-positive records from earlier passes.
+
 ## Output contract
 
-Return ONLY this block. No prose intro.
+The reviewing agent returns ONLY the disclosure header plus this block. No prose intro.
 
 ```text
+AI review. harness: <harness>, model: <model>
+
 ### Alternatives Review Findings
 
 option:<n>: <tag>: <problem>. <fix>
@@ -36,6 +42,8 @@ totals: N irrelevant N duplicate N weak N strawman N missing-context N unjustifi
 Or, when no findings:
 
 ```text
+AI review. harness: <harness>, model: <model>
+
 ### Alternatives Review Findings
 
 Lean & valid. Ship.
@@ -60,12 +68,13 @@ Lean & valid. Ship.
 
 ## Triage
 
-Label each finding `valid`, `false_positive`, or `unvalidated` with a one-line reason. If zero `valid` findings remain, output exactly `Lean & valid. Ship.` and `verdict: pass`.
+Follow `../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean (`verdict: pass`).
 
 ## Rules
 
 - One finding per line; problem then fix, separated by ". ".
 - Sort findings by `option:<n>` ascending.
 - Repeat issues per option if they span multiple options.
+- Do not re-report a finding carried forward as a false positive while its recorded reason still holds.
 - Do not add new options; only review what is provided.
 - Minor wording or disagreements are not findings unless they mislead.

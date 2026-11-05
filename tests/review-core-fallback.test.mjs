@@ -1,4 +1,4 @@
-/** review-core tests: the single-skill fallback in dependent skills must not drift from the canonical protocol. */
+/** review-core fallback drift tests. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

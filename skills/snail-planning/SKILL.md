@@ -86,7 +86,7 @@ After the plan matches the template and the pre-finalization pass is done, revie
 
 1. **Review** — dispatch a new `readonly` `general-purpose` Task subagent and run the `snail-review-plan` skill on the full plan text (paste the plan; do not point at files).
 2. **Triage** — label each finding `valid`, `false_positive`, or `unvalidated` with a one-line reason; act on `valid` only.
-3. **Fix** — resolve every `valid` finding before the next review. Prefer minimal edits; fix root causes.
+3. **Fix** — resolve every `valid` finding before the next review. Prefer minimal edits; fix root causes. Re-run the lint with the same flags as the self-audit (`--masterplan` for a masterplan, `--allow-draft` for a draft); a plan that fails is not ready for the next review.
 4. **Repeat** — dispatch a new subagent on the updated plan, carrying forward the false-positive records from earlier passes, until the core exit rule is met.
 
 ## Delivery notes

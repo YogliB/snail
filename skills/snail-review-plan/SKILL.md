@@ -7,7 +7,7 @@ description: Read-only review of a technical plan. Use when snail-planning has d
 
 Evaluate a technical plan before implementation. Flag correctness blockers, gaps, and unnecessary complexity.
 
-Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <finding> | <why dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
+Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <original finding> | <why it was dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
 
 ## When to use
 

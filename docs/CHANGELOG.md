@@ -12,6 +12,11 @@ All notable user-facing changes to snail are documented in this file.
 
 - All review skills share one protocol — `snail-review/references/review-core.md` covers the disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, and loop rules (exit rule, stuck guard). The `snail-planning` and `snail-alternatives` review loops adopt false-positive carry-forward and the stuck guard, and `snail-alternatives` now explicitly dispatches its review to a `readonly` subagent.
 
+### Fixed
+
+- `snail-review-plan` and `snail-review-alternatives` keep working in a single-skill install: each inlines a minimum protocol fallback when `review-core.md` is absent.
+- The Devin plugin manifest (`plugins/snail/.devin-plugin/plugin.json`) now matches the 0.0.7 release.
+
 ## [0.0.6] - 2026-11-02
 
 ### Added

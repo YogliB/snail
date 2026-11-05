@@ -54,4 +54,4 @@ Keep these files aligned:
 - Keep changes focused on one concern.
 - Run `nub run format` before committing.
 - Squash to a single commit with a Conventional Commit message.
-- Add a `CHANGELOG.md` entry for user-facing changes.
+- Add a `docs/CHANGELOG.md` entry for user-facing changes.

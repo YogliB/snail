@@ -2,6 +2,12 @@
 
 All notable user-facing changes to snail are documented in this file.
 
+## [0.0.6] - 2026-11-02
+
+### Added
+
+- `snail-review`: readability is now an explicit clean-code criterion - magic values, packed conditions, and clever idioms a reader must stop to decode are reportable when a plainer equivalent exists. Findings are tagged 📖 `read` and counted in `totals` between ⚡ and 🔵.
+
 ## [0.0.5] - 2026-11-02
 
 ### Added

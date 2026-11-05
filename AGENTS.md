@@ -25,6 +25,7 @@ These rules are always-on. Read them before every task:
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common problems                           |
 | [docs/SECURITY.md](docs/SECURITY.md)               | Security policy                           |
 | [docs/CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) | Code of conduct                           |
+| [CHANGELOG.md](docs/CHANGELOG.md)                  | Release notes                             |
 | [LICENSE.md](LICENSE.md)                           | License                                   |
 
 ## Condensed docs

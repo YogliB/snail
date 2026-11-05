@@ -56,10 +56,6 @@ Rules for Plan Review Findings:
   - ❓ question: unclear intent, missing context, needs author clarification
 - Focus: self-containment, executability, TODO atomicity/testability, scope/acceptance alignment, missing files/dependencies, contradictions, realistic sequencing, untestable verification, risks without mitigation, Complexity Check accuracy, masterplan ↔ sub-plan consistency, and ponytail complexity reduction. Do NOT perform pure micro prose edits unless they reduce scope, file count, or steps.
 - Do not re-report a finding carried forward as a false positive while its recorded reason still holds; report it when the reason no longer applies or it appears elsewhere — note the changed premise.
-
-End with exactly one line:
-- totals: N🔴 N🟡 N✂️ N🪵 N⚡ N📖 N🔵 N❓ | net: -<N> lines/steps possible
-- Or: Lean & valid. Ship.
 ```
 
 ## Review criteria

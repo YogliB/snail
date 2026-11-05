@@ -47,6 +47,7 @@ AI review. harness: <harness>, model: <model>
 ### Alternatives Review Findings
 
 Lean & valid. Ship.
+verdict: pass
 ```
 
 ## Tags
@@ -68,7 +69,7 @@ Lean & valid. Ship.
 
 ## Triage
 
-Follow `../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean (`verdict: pass`).
+Follow `../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean and counts as `verdict: pass`.
 
 ## Rules
 

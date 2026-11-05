@@ -29,7 +29,7 @@ One block per review pass:
 ```text
 ### <Domain> Review Findings
 
-<location>: <tag>: <problem/over-engineering>. <fix/replacement>.
+<location>: [<emoji> ]<tag>: <problem/over-engineering>. <fix/replacement>.
 totals: <domain counts>
 ```
 
@@ -41,7 +41,7 @@ Or exactly when no findings:
 Lean & valid. Ship.
 ```
 
-- Sort findings deterministically; the domain skill chooses the key.
+- Sort findings deterministically; the domain skill chooses the key and whether tags carry an emoji prefix.
 - One finding per line; problem then fix separated by `". "`.
 - Report only concrete violations: a real failure, maintenance cost, or a smaller replacement. No style-only nits outside project norms, no length or size counts by themselves.
 - Do not re-report a finding carried forward as a false positive while its recorded reason still holds; report it when the reason no longer applies or it appears in a different location — note the changed premise.
@@ -56,4 +56,4 @@ One per line: `<location> | <tag> | <original finding> | <why it was dismissed>`
 - Re-review after every fix batch on the current tree.
 - Run relevant tests after non-trivial fixes; record failures as blockers.
 - **Exit rule:** stop when the latest pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`).
-- **Stuck guard:** if the same `valid` finding persists after 3 fix passes, stop and report the blocker instead of looping forever.
+- **Stuck guard:** if the same `valid` finding (same location and finding text, line drift allowed — the false-positive identity rule) persists after 3 fix passes, stop and report the blocker instead of looping forever.

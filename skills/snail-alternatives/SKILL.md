@@ -38,7 +38,7 @@ This skill can run on its own; it still maintains the flow folder and runbook wh
 
 ## Alternatives review contract
 
-`snail-review-alternatives` returns the disclosure header plus one `### Alternatives Review Findings` block — `option:<n>: <tag>: <problem>. <fix>` lines, a `totals:` line ending in `verdict: pass / needs-revision`, or `Lean & valid. Ship.` when clean. Tags: `irrelevant`, `duplicate`, `weak`, `strawman`, `missing-context`, `unjustified`. Full contract and triage rules: the skill file plus `../snail-review/references/review-core.md`.
+`snail-review-alternatives` returns the disclosure header plus one `### Alternatives Review Findings` block — `option:<n>: <tag>: <problem>. <fix>` lines, a `totals:` line ending in `verdict: pass / needs-revision`, or `Lean & valid. Ship.` when clean. Tags: `irrelevant`, `duplicate`, `weak`, `strawman`, `missing-context`, `unjustified`. Full contract and triage rules: `../snail-review-alternatives/SKILL.md` plus `../snail-review/references/review-core.md`.
 
 ## Example
 

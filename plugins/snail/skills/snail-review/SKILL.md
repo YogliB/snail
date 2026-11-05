@@ -174,7 +174,7 @@ If the diff is empty, stop in one sentence. The disclosure header goes on the fi
 - The intent sources block (or `none resolved`)
 - `valid` findings fixed (count and one-line summary)
 - `false_positive` count
-- `false_positive` findings from each round under the `false_positives` key, one record per line in the record shape above, so future fix-mode runs can seed from them
+- `false_positive` findings from each round under the `false_positives` key, one record per line in the record shape from Input (see `references/review-core.md`), so future fix-mode runs can seed from them
 - Any `unvalidated` items / validation gaps
 - Test and browser/visual status, if available
 

@@ -74,7 +74,7 @@ AI review. harness: <harness>, model: <model>
 ### Review Findings
 
 section:line: <emoji> <tag>: <problem/over-engineering>. <fix/replacement>.
-totals: N🔴 N🟡 N✂️ N🪵 N⚡ N🔵 N❓ | net: -<N> lines possible
+totals: N🔴 N🟡 N✂️ N🪵 N⚡ N📖 N🔵 N❓ | net: -<N> lines possible
 
 Or exactly when no findings:
 
@@ -94,6 +94,7 @@ Rules for Review Findings:
   - ✂️ cut: dead code, unused feature/dependency, speculative code (replacement: nothing)
   - 🪵 yagni: single-caller layer, unset config, premature abstraction (replacement: inline or drop)
   - ⚡ simplify: hand-rolled stdlib behavior, native platform duplicate, complex pattern (replacement: name function/type/feature or shorter form)
+  - 📖 read: magic values, packed conditions, or clever idioms a reader must stop to decode (replacement: plainer equivalent)
   - 🔵 nit: naming, minor style, formatting
   - ❓ question: unclear logic, missing spec/context, or a gap between the code and a resolved intent source (quote the source line)
 - Do not report style-only nits outside project norms unless indicating real bugs.
@@ -118,7 +119,7 @@ The block above is the subagent contract. When the orchestrator reports `valid` 
 <another file path>
 - L<line> <emoji> <tag>: <problem>. <fix>.
 
-totals: N🔴 N🟡 N✂️ N🪵 N⚡ N🔵 N❓ | net: -<N> lines possible
+totals: N🔴 N🟡 N✂️ N🪵 N⚡ N📖 N🔵 N❓ | net: -<N> lines possible
 ```
 
 ## Clean-code criteria

@@ -64,7 +64,8 @@ function syncAll(dst) {
 	}
 	let count = 0;
 	for (const d of readdirSync(join(root, 'skills'))) {
-		if (!d.startsWith('snail-') || !statSync(join(root, 'skills', d)).isDirectory()) continue;
+		if (d !== 'snail' && !d.startsWith('snail-')) continue;
+		if (!statSync(join(root, 'skills', d)).isDirectory()) continue;
 		cpSync(join(root, 'skills', d), join(dst, 'skills', d), { recursive: true });
 		count++;
 	}

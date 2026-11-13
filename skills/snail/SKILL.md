@@ -15,7 +15,7 @@ Run commands one-shot; never watch mode, never interactive.
 ## Modes
 
 - **manual** (default): stop after each mode and wait for the user's approval before the next.
-- **auto**: run EXPLORE → ALT → PLN → EXC → REV → VERIFY → SHIP without stopping; still ask when critical input is missing.
+- **auto**: run EXPLORE → ALT → PLN → EXC → REV → VERIFY → SHIP without stopping; ALT takes its own recommendation, REV fixes and re-reviews, VERIFY must pass before SHIP. Still ask when critical input is missing.
 
 ---
 
@@ -51,7 +51,7 @@ Run commands one-shot; never watch mode, never interactive.
 
 ## EXC — Execution Mode (Keyword: EXC)
 
-- The only mode that edits files. Execute the last approved plan exactly, in order, one atomic commit per step.
+- The only mode that edits files. Execute the last approved plan exactly, in order, one atomic commit per step on a feature branch — never commit or push to the default branch.
 - Run the plan's checks after every step; never defer them to the end, never weaken an existing test.
 - Stop and flag plan gaps instead of improvising; resume after the user answers.
 - If invoked with no approved plan, auto-run ALT, take the recommended option, PLN, then execute.
@@ -62,21 +62,34 @@ Run commands one-shot; never watch mode, never interactive.
 
 - Review the current diff: strengths, weaknesses, risks, test gaps.
 - One finding per line, sorted by file and line, each with a concrete fix.
-- Read-only unless the user explicitly asks for fixes.
+- Read-only unless the user explicitly asks for fixes: report the findings and stop.
+- In auto, or on an explicit fix request: fix every finding and re-review; stop and report if the same finding survives 3 passes.
 
 ## VERIFY — Verify Mode (Keyword: VERIFY)
 
 - Exercise the change end-to-end the way a user hits it, not only the test suite.
+- No real-world side effects (messages, posts, purchases, bookings) without explicit user approval; exercise locally or against sandboxes.
 - Report each step and an overall PASS or FAIL; stop on the first failure.
-- Never auto-fix failures.
+- Never auto-fix failures. SHIP only after a PASS.
 
 ## SHIP — PR Mode (Keyword: SHIP)
 
 - Create or update the GitHub PR via `gh`: conventional-commit title, short reviewer-focused body, follow the repo's PR template.
-- Create and update only: never merge, never push to a protected branch. The user reviews and merges.
+- Create and update only: never merge, never push to the default branch, even when unprotected. The user reviews and merges.
 
 ## SIM — Simplify Mode (Keyword: SIM)
 
 - Reduce complexity of existing code or a plan without changing behavior.
 - Suggest simpler APIs, data structures, or flows with short before/after snippets.
 - Never produce diffs or file edits.
+
+## Comparing to the snail-* pipeline
+
+- Run one workflow per task: this skill alone, or the snail-* skills — never mixed.
+- Record wall time, token usage, user interventions, and outcome per run; that record is the comparison data.
+
+## Example prompts
+
+- `/snail add-auth-token` — manual, stops at each mode
+- `/snail auto add-auth-token`
+- `/snail REV`

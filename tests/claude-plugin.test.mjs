@@ -12,7 +12,7 @@ import { REPO_ROOT, tmpdir_ } from './helpers.mjs';
 const VERSION = process.env.CLAUDE_CODE_VERSION || '2.1.304';
 
 test(
-	'snail installs as a Claude Code plugin with 10 skills',
+	'snail installs as a Claude Code plugin with 11 skills',
 	{
 		skip:
 			process.env.CLAUDE_PLUGIN_TEST !== '1' &&
@@ -48,7 +48,7 @@ test(
 		assert.equal(run_(['plugin', 'install', 'snail@snail']).status, 0, 'plugin install failed');
 		const details = run_(['plugin', 'details', 'snail@snail']);
 		assert.equal(details.status, 0, 'plugin details failed');
-		assert.match(details.stdout, /Skills \(10\)/, `expected 10 skills:\n${details.stdout}`);
+		assert.match(details.stdout, /Skills \(11\)/, `expected 11 skills:\n${details.stdout}`);
 		for (const removed of ['snail-review-plan', 'snail-review-alternatives']) {
 			assert.ok(
 				!details.stdout.includes(removed),

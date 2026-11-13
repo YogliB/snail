@@ -56,18 +56,19 @@ Use the snail-review skill on the current diff (say "fix" to also fix it).
 Use the snail-pr skill to open a pull request.
 ```
 
-| Skill                                                       | Use when                                    |
-| ----------------------------------------------------------- | ------------------------------------------- |
-| [snail-explore](../skills/snail-explore/SKILL.md)           | Understand the repo first.                  |
-| [snail-alternatives](../skills/snail-alternatives/SKILL.md) | Options with mandatory independent review.  |
-| [snail-planning](../skills/snail-planning/SKILL.md)         | An executable, independently reviewed plan. |
-| [snail-implement](../skills/snail-implement/SKILL.md)       | You have an approved plan to execute.       |
-| [snail-review](../skills/snail-review/SKILL.md)             | Diff review; "fix" also fixes.              |
-| [snail-verify](../skills/snail-verify/SKILL.md)             | Prove the changes work.                     |
-| [snail-pr](../skills/snail-pr/SKILL.md)                     | You want a PR.                              |
-| [snail-project-docs](../skills/snail-project-docs/SKILL.md) | Scaffold a project's docs.                  |
-| [snail-ai-toolbelt](../skills/snail-ai-toolbelt/SKILL.md)   | Pointers to external tools and MCPs.        |
-| [snail-flow](../skills/snail-flow/SKILL.md)                 | The full workflow, end to end.              |
+| Skill                                                       | Use when                                             |
+| ----------------------------------------------------------- | ---------------------------------------------------- |
+| [snail-explore](../skills/snail-explore/SKILL.md)           | Understand the repo first.                           |
+| [snail-alternatives](../skills/snail-alternatives/SKILL.md) | Options with mandatory independent review.           |
+| [snail-planning](../skills/snail-planning/SKILL.md)         | An executable, independently reviewed plan.          |
+| [snail-implement](../skills/snail-implement/SKILL.md)       | You have an approved plan to execute.                |
+| [snail-review](../skills/snail-review/SKILL.md)             | Diff review; "fix" also fixes.                       |
+| [snail-verify](../skills/snail-verify/SKILL.md)             | Prove the changes work.                              |
+| [snail-pr](../skills/snail-pr/SKILL.md)                     | You want a PR.                                       |
+| [snail-project-docs](../skills/snail-project-docs/SKILL.md) | Scaffold a project's docs.                           |
+| [snail-ai-toolbelt](../skills/snail-ai-toolbelt/SKILL.md)   | Pointers to external tools and MCPs.                 |
+| [snail-flow](../skills/snail-flow/SKILL.md)                 | The full workflow, end to end.                       |
+| [snail](../skills/snail/SKILL.md)                           | Experimental: the whole workflow in one short skill. |
 
 The separate `snail-review-alternatives` and `snail-review-plan` commands are folded into their parents. Ask `snail-alternatives` to review supplied options or `snail-planning` to review a supplied plan without rewriting it. Drafting with either parent still requires an independent review before delivery.
 
@@ -84,6 +85,18 @@ In Claude Code and Devin the plugin namespaces commands with `/snail:`:
 ```
 
 Installed a single skill with `npx skills add`? Drop the prefix: `/snail-planning`.
+
+### Experimental: one skill for the whole workflow
+
+`snail` is a single short skill covering the same stages (QNA, INV, EXPLORE, ALT, PLN, EXC, REV, VERIFY, SHIP, SIM), picked up from plain language — no keywords to memorize. `manual` (default) stops for approval at each stage and never edits code until you approve the build; `auto` runs the whole chain, only when you ask. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
+
+```text
+/snail:snail add-user-auth
+/snail:snail auto add-user-auth
+/snail:snail review this diff
+```
+
+Run one workflow per task — this skill alone or the `snail-*` skills, never mixed — and record time, tokens, interventions, and outcome to compare the two.
 
 ## The flow
 

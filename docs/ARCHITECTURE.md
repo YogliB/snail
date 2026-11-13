@@ -23,10 +23,10 @@ A cross-agent toolkit: reusable skills, plus an optional multi-phase workflow on
 ## How a request flows
 
 ```text
-user prompt ──▶ matching skills/snail-*/SKILL.md ──▶ output or file artifact
+user prompt ──▶ matching skills/snail*/SKILL.md ──▶ output or file artifact
 ```
 
-Claude Code loads the skill via `/snail-*` or description match, Devin via `/snail:*`, Cursor through the plugin's skills and rules. Agents without skill support can read the SKILL.md files by hand.
+Claude Code loads the skill via `/snail-*` or `/snail`, or description match, Devin via `/snail:*`, Cursor through the plugin's skills and rules. Agents without skill support can read the SKILL.md files by hand.
 
 A full `/snail-flow` run chains the phase skills:
 

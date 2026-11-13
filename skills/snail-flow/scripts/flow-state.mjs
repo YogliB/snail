@@ -24,6 +24,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import yaml from './vendor/js-yaml.mjs';
 import { requireNode24 } from './node-guard.mjs';
+import { projectRoot } from './artifact-path.mjs';
 
 requireNode24('flow-state');
 
@@ -210,13 +211,20 @@ function receiptGitHead(path) {
 function warnStaleReceipt(dir, rel) {
 	const rh = receiptGitHead(join(dir, rel));
 	if (rh === '' || rh === 'none') return;
-	const cur = gitHead(dir);
-	if (!cur || rh === cur) return;
+	const project = readRunbook(dir)['project-root'] || dir;
+	const cur = gitHead(project);
+	if (!cur) {
+		console.error(
+			`flow-state: warning: cannot resolve git HEAD for ${project}; stale receipt check skipped`,
+		);
+		return;
+	}
+	if (rh === cur) return;
 	const rhs = rh.slice(0, 8);
 	const curs = cur.slice(0, 8);
-	const anc = spawnSync('git', ['-C', dir, 'merge-base', '--is-ancestor', rh, cur]);
+	const anc = spawnSync('git', ['-C', project, 'merge-base', '--is-ancestor', rh, cur]);
 	if (anc.status === 0) {
-		const n = spawnSync('git', ['-C', dir, 'rev-list', '--count', `${rh}..${cur}`], {
+		const n = spawnSync('git', ['-C', project, 'rev-list', '--count', `${rh}..${cur}`], {
 			encoding: 'utf8',
 		}).stdout.trim();
 		console.error(
@@ -477,9 +485,10 @@ function cmdInit(dir, args) {
 			}
 		}
 	}
-	mkdirSync(dir, { recursive: true });
+	mkdirSync(dir, { recursive: true, mode: 0o700 });
 	const rb = {
 		'runbook-version': RUNBOOK_VERSION,
+		'project-root': projectRoot(),
 		slug,
 		status: 'in-progress',
 		goal,

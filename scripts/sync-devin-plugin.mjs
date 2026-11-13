@@ -8,6 +8,7 @@
  */
 import {
 	cpSync,
+	copyFileSync,
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
@@ -25,6 +26,35 @@ requireNode24('sync-devin-plugin');
 
 const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
 const plugin = join(root, 'plugins', 'snail');
+
+// Referencing the bundled resolver in SKILL.md declares the skill as a consumer.
+const artifactSkills = readdirSync(join(root, 'skills')).filter((skill) => {
+	const doc = join(root, 'skills', skill, 'SKILL.md');
+	return (
+		skill.startsWith('snail-') &&
+		existsSync(doc) &&
+		readFileSync(doc, 'utf8').includes('scripts/artifact-path.mjs')
+	);
+});
+const artifactSource = join(root, 'scripts', 'artifact-path.mjs');
+let artifactDrift = false;
+for (const skill of artifactSkills) {
+	const target = join(root, 'skills', skill, 'scripts', 'artifact-path.mjs');
+	if (process.argv[2] === '--check') {
+		if (
+			!existsSync(target) ||
+			readFileSync(target).compare(readFileSync(artifactSource)) !== 0
+		) {
+			console.error(
+				`sync-devin-plugin: ${target} is out of sync with scripts/artifact-path.mjs`,
+			);
+			artifactDrift = true;
+		}
+	} else {
+		mkdirSync(join(root, 'skills', skill, 'scripts'), { recursive: true });
+		copyFileSync(artifactSource, target);
+	}
+}
 
 /** Copy skills/snail-* and rules/*.md into dst. Returns [skillCount, ruleCount]. */
 function syncAll(dst) {
@@ -83,7 +113,7 @@ function dirDiff(a, b) {
 if (process.argv[2] === '--check') {
 	const tmp = mkdtempSync(join(tmpdir(), 'sync-devin-plugin-'));
 	syncAll(tmp);
-	let status = 0;
+	let status = artifactDrift ? 1 : 0;
 	for (const sub of ['skills', 'rules']) {
 		const diff = dirDiff(join(tmp, sub), join(plugin, sub));
 		if (diff) {

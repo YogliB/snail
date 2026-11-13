@@ -1,7 +1,7 @@
 /** sync-devin-plugin tests: plugins/snail mirrors skills/ and rules/. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { REPO_ROOT, tmpdir_, run, git, gitInit } from './helpers.mjs';
 
@@ -12,6 +12,11 @@ function setup(t) {
 	gitInit(tmp);
 	mkdirSync(join(tmp, 'skills/snail-demo'), { recursive: true });
 	mkdirSync(join(tmp, 'rules'));
+	mkdirSync(join(tmp, 'scripts'));
+	copyFileSync(
+		join(REPO_ROOT, 'scripts/artifact-path.mjs'),
+		join(tmp, 'scripts/artifact-path.mjs'),
+	);
 	writeFileSync(join(tmp, 'skills/snail-demo/SKILL.md'), '# demo skill\n');
 	writeFileSync(join(tmp, 'rules/demo.md'), 'demo rule\n');
 	return tmp;
@@ -76,4 +81,19 @@ test('the real repo plugin is in sync', () => {
 		0,
 		'plugins/snail is out of sync; run node scripts/sync-devin-plugin.mjs',
 	);
+});
+
+// New artifact-producing skills are discovered from their resolver contract.
+test('sync discovers a new artifact consumer and detects resolver drift', (t) => {
+	const tmp = setup(t);
+	mkdirSync(join(tmp, 'skills/snail-future'));
+	writeFileSync(join(tmp, 'skills/snail-future/SKILL.md'), 'Use scripts/artifact-path.mjs\n');
+	assert.equal(run(SYNC, [], { cwd: tmp }).status, 0);
+	const helper = join(tmp, 'skills/snail-future/scripts/artifact-path.mjs');
+	assert.equal(
+		readFileSync(helper, 'utf8'),
+		readFileSync(join(REPO_ROOT, 'scripts/artifact-path.mjs'), 'utf8'),
+	);
+	writeFileSync(helper, 'drift\n');
+	assert.notEqual(run(SYNC, ['--check'], { cwd: tmp }).status, 0);
 });

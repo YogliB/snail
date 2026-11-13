@@ -6,13 +6,13 @@ Agent-facing entry point. **Read the rules before doing any work here.** For the
 
 These rules are always-on. Read them before every task:
 
-| Rule                | Guideline                                                                                                                                                                   |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Skill format        | Keep `SKILL.md` files short, clear, and concise. Preserve output contracts, tag definitions, and subagent instructions; remove redundant prose and duplicated explanations. |
-| Skill usage         | Before using a snail skill, read `skills/<skill>/SKILL.md`.                                                                                                                 |
-| Workflow invocation | Do not run `snail-flow` unless the user explicitly asks for it.                                                                                                             |
-| Workflow output     | Flow skills write numbered phase YAML artifacts to `.agents/flows/snail-<slug>/` and update `runbook.yaml` via `flow-state.mjs` (Node 24+ required).                        |
-| Commits             | Run `nub run format` before committing. Squash to a single Conventional Commit.                                                                                             |
+| Rule                | Guideline                                                                                                                                                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Skill format        | Keep `SKILL.md` files short, clear, and concise. Preserve output contracts, tag definitions, and subagent instructions; remove redundant prose and duplicated explanations.                                                 |
+| Skill usage         | Before using a snail skill, read `skills/<skill>/SKILL.md`.                                                                                                                                                                 |
+| Workflow invocation | Do not run `snail-flow` unless the user explicitly asks for it.                                                                                                                                                             |
+| Workflow output     | Resolve `<flow-root>` using the skill's `scripts/artifact-path.mjs` from the project. Artifacts go under XDG state by default, never the repo unless explicitly requested; update runbooks via `flow-state.mjs` (Node 24+). |
+| Commits             | Run `nub run format` before committing. Squash to a single Conventional Commit.                                                                                                                                             |
 
 ## Docs index
 
@@ -56,7 +56,7 @@ nub run format
 
 - `skills/` — skills, source of truth for all agents.
 - `rules/` — shared rules shipped inside the Cursor and Devin plugins.
-- `.agents/flows/` — flow output directory (actual flow dirs are `snail-*`, plus the runbook-less `snail-review/` standalone location).
+- External `<flow-root>/` — project-specific XDG state output (flow dirs `snail-*`, plus standalone `snail-review/`); not part of the repo layout.
 - `.cursor-plugin/` — Cursor plugin manifest; the repo root is the plugin.
 - `.claude-plugin/` — Claude Code plugin manifest.
 - `plugins/snail/` — Devin plugin (manifest, `skills/` and `rules/` synced from root).

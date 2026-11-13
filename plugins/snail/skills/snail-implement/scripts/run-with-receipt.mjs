@@ -35,7 +35,7 @@ if (!/^[A-Za-z0-9._-]+$/.test(label)) {
 }
 if (sep !== '--' || command.length < 1) usage();
 
-mkdirSync(dir, { recursive: true });
+mkdirSync(dir, { recursive: true, mode: 0o700 });
 
 const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\..*/, 'Z').replace('T', 'T');
 const startS = Math.floor(Date.now() / 1000);

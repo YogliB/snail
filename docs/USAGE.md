@@ -86,6 +86,18 @@ In Claude Code and Devin the plugin namespaces commands with `/snail:`:
 
 Installed a single skill with `npx skills add`? Drop the prefix: `/snail-planning`.
 
+### Experimental: one skill for the whole workflow
+
+`snail` is a single short skill covering the same stages with mode keywords (QNA, INV, EXPLORE, ALT, PLN, EXC, REV, VERIFY, SHIP, SIM), in `manual` (stops for approval at each mode) or `auto`. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
+
+```text
+/snail:snail add-user-auth
+/snail:snail auto add-user-auth
+/snail:snail REV
+```
+
+Run one workflow per task — this skill alone or the `snail-*` skills, never mixed — and record time, tokens, interventions, and outcome to compare the two.
+
 ## The flow
 
 ```text

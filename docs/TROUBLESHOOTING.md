@@ -43,7 +43,7 @@ Shrink the plan, or split it into a masterplan plus sub-plans.
 
 ## Review finds the plan itself is wrong
 
-Back to planning: revise `2 - PLANNING.yaml`, re-run `snail-review-plan`, re-implement. Don't patch code against a bad plan.
+Back to planning: revise `2 - PLANNING.yaml`, re-run the mandatory internal review in `snail-planning`, re-implement. Don't patch code against a bad plan.
 
 ## The agent diverged from a skill
 

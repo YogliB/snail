@@ -1,13 +1,8 @@
----
-name: snail-review-alternatives
-description: Independent review of proposed alternatives before they are presented to the user. Use when the snail-alternatives skill has generated options, or when the user passes alternatives and asks for a review.
----
-
 # Review Alternatives
 
 Evaluate up to 3 proposed alternatives and flag low-quality options. Read-only unless the user explicitly asks the reviewer to rewrite.
 
-Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <original finding> | <why it was dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
+Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <original finding> | <why it was dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
 
 ## When to use
 
@@ -68,7 +63,7 @@ Lean & valid. Ship.
 
 ## Triage
 
-Follow `../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean and counts as `verdict: pass`.
+Follow `../../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean and counts as `verdict: pass`.
 
 ## Rules
 

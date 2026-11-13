@@ -12,16 +12,16 @@ Reusable agent skills and an optional stage-gated workflow.
 
 - skills/snail-ai-toolbelt/SKILL.md
 - skills/snail-alternatives/SKILL.md
+- skills/snail-alternatives/references/review.md
 - skills/snail-explore/SKILL.md
 - skills/snail-flow/SKILL.md
 - skills/snail-implement/SKILL.md
 - skills/snail-planning/SKILL.md
+- skills/snail-planning/references/review.md
 - skills/snail-planning/templates/masterplan.yaml
 - skills/snail-planning/templates/plan.yaml
 - skills/snail-pr/SKILL.md
 - skills/snail-project-docs/SKILL.md
-- skills/snail-review-alternatives/SKILL.md
-- skills/snail-review-plan/SKILL.md
 - skills/snail-review/SKILL.md
 - skills/snail-verify/SKILL.md
 

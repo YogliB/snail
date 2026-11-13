@@ -4,6 +4,11 @@ All notable user-facing changes to snail are documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Alternatives and planning now include their own mandatory independent reviews. Use `snail-alternatives` or `snail-planning` to review supplied options or plans; the separate review commands are removed.
+- Code review avoids repeated diff computation across reviewers.
+
 ## [0.0.8] - 2026-11-13
 
 ### Changed

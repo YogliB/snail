@@ -1,13 +1,8 @@
----
-name: snail-review-plan
-description: Read-only review of a technical plan. Use when snail-planning has drafted a plan, or the user passes a plan and asks for a review.
----
-
 # Plan Review
 
 Evaluate a technical plan before implementation. Flag correctness blockers, gaps, and unnecessary complexity.
 
-Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <original finding> | <why it was dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
+Shared protocol — disclosure header, reviewer dispatch, triage, findings envelope, false-positive records, loop rules — is in `../../snail-review/references/review-core.md`; it is part of this skill. If that file is missing (single-skill install), apply its minimum: the orchestrator triages each finding `valid`, `false_positive`, or `unvalidated` and acts on `valid` only; carry `<location> | <tag> | <original finding> | <why it was dismissed>` records into the next pass; stop when a pass has zero `valid` findings, or report a blocker when the same `valid` finding survives 3 fix passes.
 
 ## When to use
 
@@ -75,7 +70,7 @@ Rules for Plan Review Findings:
 
 ## Triage
 
-Follow `../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean.
+Follow `../../snail-review/references/review-core.md`: subagent output is untrusted; the orchestrating agent labels each finding and acts on `valid` only. A pass with zero `valid` findings after triage is clean.
 
 ## Rules
 

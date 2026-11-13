@@ -11,7 +11,7 @@ Reusable agent skills and an optional stage-gated workflow for Claude, Cursor, a
 
 ## What you get
 
-- **Skills** — single-purpose prompts like `snail-explore`, `snail-planning`, `snail-implement`, `snail-review-plan`, `snail-review`, and `snail-pr`.
+- **Skills** — single-purpose prompts like `snail-explore`, `snail-planning`, `snail-implement`, `snail-review`, and `snail-pr`.
 - **Slash commands** — in Claude Code, type `/snail-explore`, `/snail-planning`, `/snail-implement`, `/snail-review`, `/snail-pr`, or `/snail-flow` to invoke the matching skill.
 - **A workflow** — optional full flow: explore → alternatives → plan → build → review → verify → PR.
 - **Rules** — editor-specific conventions for Claude and Cursor.
@@ -91,7 +91,7 @@ Name the skill directly:
 
 ```text
 Use the snail-planning skill to write a plan for pagination.
-Use the snail-review-plan skill to review the plan.
+Use the snail-planning skill to review an existing plan without rewriting it.
 Use the snail-implement skill to implement the plan.
 Use the snail-review skill on the current diff (say "fix" for fix mode).
 Use the snail-pr skill to open a pull request.
@@ -111,7 +111,7 @@ Each phase writes a numbered YAML artifact into `<flow-root>/snail-<slug>/`, so 
 
 Only an explicit request from the user enables `--in-repo`, which resolves to `.agents/flows`. Existing repo artifacts are never automatically moved, deleted, resumed, or treated as opt-in. For an old flow, explicitly choose whether to resume it in place or move it; the normal default starts outside the repo. An unwritable external directory is an error, not a reason to write into the repo.
 
-The storage rule covers snail workflow byproducts. Requested project deliverables such as README files remain in the project, and review-plan/review-alternatives return findings to their caller rather than choosing a separate output path.
+The storage rule covers snail workflow byproducts. Requested project deliverables such as README files remain in the project, and the internal plan and alternatives reviews return findings to their parent rather than choosing a separate output path.
 
 ## Caveats
 

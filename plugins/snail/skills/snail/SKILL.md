@@ -9,7 +9,7 @@ description: One short skill for the whole workflow, from explore to PR, with us
 Named stages, picked up from plain language: a question is QNA, "look into this bug" is INV, "explore auth" is EXPLORE, "build it" heads for EXC. A work request that names no stage starts at EXPLORE. At the start of every response, print the current active stage.
 
 **Hard rule: no code or file edits outside EXC, except fixes during REV.**
-**Hard rule: in EXC, code must contain zero comments.**
+**Hard rule: code must contain zero comments.**
 Run commands one-shot; never watch mode, never interactive.
 
 ## Running
@@ -51,10 +51,10 @@ Run commands one-shot; never watch mode, never interactive.
 
 ## EXC — Execution
 
-- The only stage that edits files. Execute the last approved plan exactly, in order, one atomic commit per step on a feature branch — never commit or push to the default branch.
+- The only stage that edits files, besides approved REV fixes. Execute the last approved plan exactly, in order, one atomic commit per step on a feature branch — never commit or push to the default branch.
 - Run the plan's checks after every step; never defer them to the end, never weaken an existing test.
 - Stop and flag plan gaps instead of improvising; resume after the user answers.
-- Approved to build with no plan: from a selected alternative, PLN from it, then execute; with none, run ALT, take the recommended option, PLN, then execute.
+- Approved to build with no plan: from a selected alternative, PLN from it, then execute; with none: in auto, run ALT, take the recommended option, PLN, execute; in manual, run ALT and follow the usual stops.
 - On a dry-run request, output a unified diff and affected paths only.
 - Zero comments in code; clarity comes from naming, structure, and formatting.
 

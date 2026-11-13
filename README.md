@@ -14,7 +14,7 @@ Reusable agent skills and an optional stage-gated workflow for Claude, Cursor, a
 - **Skills** — single-purpose prompts like `snail-explore`, `snail-planning`, `snail-implement`, `snail-review`, and `snail-pr`.
 - **Slash commands** — in Claude Code, type `/snail-explore`, `/snail-planning`, `/snail-implement`, `/snail-review`, `/snail-pr`, or `/snail-flow` to invoke the matching skill.
 - **A workflow** — optional full flow: explore → alternatives → plan → build → review → verify → PR.
-- **An experiment** — `snail`: the same stages as one short, mode-driven skill (`/snail:snail`, `manual` or `auto`).
+- **An experiment** — `snail`: the same stages as one short skill (`/snail:snail`, `manual` or `auto`).
 - **Rules** — editor-specific conventions for Claude and Cursor.
 
 Flow state, phase artifacts and receipts are YAML. No magic binaries, no cloud services, no tracking. Every gate script needs only Node 24+ (current LTS; git optional) — the YAML parser is vendored inside each skill, so installs never run npm or touch the network.

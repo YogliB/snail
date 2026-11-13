@@ -32,6 +32,7 @@ test('snail skill guards', () => {
 	assert.match(skill, /never merge/);
 	assert.match(skill, /never commit or push to the default branch/);
 	assert.match(skill, /SHIP only after a PASS/);
+	assert.match(skill, /EXC starts only after the user explicitly approves/);
 });
 
 test('snail skill devin copy is in sync', () => {

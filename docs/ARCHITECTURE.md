@@ -49,7 +49,7 @@ Every flow lives in `<flow-root>/snail-<slug>/`: a `runbook.yaml`, the numbered 
 - Four commands: `init`, `check`, `advance` (the only structural mutation — it refuses until the row's artifact exists and its required flags pass), `note` (append-only), and `set` (repair hatch).
 - Agents never hand-edit the runbook; the script (`skills/snail-flow/scripts/flow-state.mjs`) owns it.
 - Everything the flow produces is YAML: the runbook, the phase artifacts, the receipts. The gate parses artifact YAML with the vendored parser, so a malformed artifact fails the check instead of passing silently.
-- `<flow-root>` is resolved by the bundled `scripts/artifact-path.mjs`: `$XDG_STATE_HOME/snail/projects/<project-id>/flows` (fallback `~/.local/state/snail/...`). It is outside the checkout by default. Only an explicit user request enables `--in-repo`. Existing repo artifacts are left untouched.
+- `<flow-root>` is resolved by the bundled `scripts/artifact-path.mjs`: `$XDG_STATE_HOME/snail/<project>-<id8>` (fallback `~/.local/state/snail/...`). It is outside the checkout by default. Only an explicit user request enables `--in-repo`. Existing repo artifacts are left untouched.
 - Each new runbook records `project-root`, so external receipts still compare git metadata against the source checkout, not the state directory. Run gate commands from the project working directory.
 
 What the gate guarantees, and nothing more: fixed phase order, artifact must exist and parse, review can't close with valid findings, verify can't close without a passing receipt.

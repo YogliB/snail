@@ -1,3 +1,6 @@
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { createHash } from 'node:crypto';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -23,13 +26,13 @@ test('XDG defaults, overrides, aliases, distinct checkouts, worktrees and explic
 	git(repo, ['commit', '-qm', 'initial', '--allow-empty']);
 	const cwd = repo;
 	const defaults = artifactRoot({ cwd, home, env: {} });
-	assert.ok(defaults.startsWith(join(home, '.local/state/snail/projects/')));
+	assert.ok(defaults.startsWith(join(home, '.local/state/snail/')));
 	for (const value of ['', 'relative/path']) {
 		assert.equal(artifactRoot({ cwd, home, env: { XDG_STATE_HOME: value } }), defaults);
 	}
 	const state = join(tmp, 'state with spaces');
 	const custom = artifactRoot({ cwd, home, env: { XDG_STATE_HOME: state } });
-	assert.ok(custom.startsWith(join(state, 'snail/projects/')));
+	assert.ok(custom.startsWith(join(state, 'snail/')));
 	mkdirSync(join(repo, 'sub'));
 	assert.equal(artifactRoot({ cwd: join(repo, 'sub'), home, env: {} }), defaults);
 	symlinkSync(repo, join(tmp, 'alias'));
@@ -51,7 +54,7 @@ test('XDG defaults, overrides, aliases, distinct checkouts, worktrees and explic
 		/inside the project/,
 	);
 	assert.equal(existsSync(join(repo, '.agents')), false);
-	assert.equal(existsSync(join(home, '.local')), false);
+	assert.equal(readFileSync(join(defaults, '.project-path'), 'utf8'), resolve(repo));
 	assert.equal(git(repo, ['status', '--porcelain']), '');
 });
 
@@ -183,4 +186,47 @@ test('external legacy runbook warns when no source checkout can be resolved', (t
 	const advanced = run(flow, ['advance', dir, `--receipts=receipts/${file}`], { cwd: repo });
 	assert.equal(advanced.status, 0, advanced.stderr);
 	assert.match(advanced.stderr, /cannot resolve git HEAD.*stale receipt check skipped/);
+});
+
+// A colliding short ID never reuses another project's directory.
+test('readable flat root extends its ID on collision and keeps both projects intact', (t) => {
+	const tmp = tmpdir_(t);
+	const repo = join(tmp, 'my-app');
+	mkdirSync(repo);
+	gitInit(repo);
+	const state = join(tmp, 'state');
+	const id = createHash('sha256').update(resolve(repo)).digest('hex');
+	const occupied = join(state, 'snail', `my-app-${id.slice(0, 8)}`);
+	mkdirSync(occupied, { recursive: true });
+	writeFileSync(join(occupied, '.project-path'), '/another/project');
+	writeFileSync(join(occupied, 'keep'), 'unchanged');
+	const root = artifactRoot({ cwd: repo, env: { XDG_STATE_HOME: state } });
+	assert.equal(root, join(state, 'snail', `my-app-${id.slice(0, 12)}`));
+	assert.equal(readFileSync(join(root, '.project-path'), 'utf8'), resolve(repo));
+	assert.equal(readFileSync(join(occupied, 'keep'), 'utf8'), 'unchanged');
+	assert.equal(artifactRoot({ cwd: repo, env: { XDG_STATE_HOME: state } }), root);
+	assert.deepEqual(readdirSync(root), ['.project-path']);
+});
+
+// Concurrent resolution must publish one complete project marker, not partial state.
+test('concurrent standalone resolvers select one root and leave no temporary markers', async (t) => {
+	const tmp = tmpdir_(t);
+	const repo = join(tmp, 'app');
+	mkdirSync(repo);
+	gitInit(repo);
+	const env = { ...process.env, XDG_STATE_HOME: join(tmp, 'state') };
+	const exec = promisify(execFile);
+	const results = await Promise.all(
+		Array.from({ length: 8 }, () =>
+			exec(process.execPath, [join(REPO_ROOT, 'scripts/artifact-path.mjs')], {
+				cwd: repo,
+				env,
+			}),
+		),
+	);
+	const roots = new Set(results.map(({ stdout }) => stdout.trim()));
+	assert.equal(roots.size, 1);
+	const root = [...roots][0];
+	assert.deepEqual(readdirSync(root), ['.project-path']);
+	assert.equal(readFileSync(join(root, '.project-path'), 'utf8'), resolve(repo));
 });

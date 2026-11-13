@@ -1,8 +1,16 @@
 #!/usr/bin/env node
-import { createHash } from 'node:crypto';
-import { existsSync, realpathSync } from 'node:fs';
+import { createHash, randomUUID } from 'node:crypto';
+import {
+	existsSync,
+	linkSync,
+	mkdirSync,
+	readFileSync,
+	realpathSync,
+	rmSync,
+	writeFileSync,
+} from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
@@ -29,14 +37,37 @@ export function artifactRoot({
 			? env.XDG_STATE_HOME
 			: join(home, '.local', 'state');
 	const id = createHash('sha256').update(project).digest('hex');
-	const root = physicalPath(resolve(base, 'snail', 'projects', id, 'flows'));
-	const rel = relative(project, root);
-	if (rel === '' || (!isAbsolute(rel) && rel !== '..' && !rel.startsWith(`..${sep}`))) {
-		throw new Error(
-			'XDG state directory is inside the project; choose an external XDG_STATE_HOME or explicitly request --in-repo',
-		);
+	const name =
+		basename(project)
+			.replace(/[^\p{L}\p{N}._-]+/gu, '-')
+			.slice(0, 48) || 'project';
+	for (let length = 8; length <= id.length; length += 4) {
+		const root = physicalPath(resolve(base, 'snail', `${name}-${id.slice(0, length)}`));
+		const rel = relative(project, root);
+		if (rel === '' || (!isAbsolute(rel) && rel !== '..' && !rel.startsWith(`..${sep}`))) {
+			throw new Error(
+				'XDG state directory is inside the project; choose an external XDG_STATE_HOME or explicitly request --in-repo',
+			);
+		}
+		mkdirSync(root, { recursive: true, mode: 0o700 });
+		const marker = join(root, '.project-path');
+		if (!existsSync(marker)) {
+			const tmp = join(root, `.project-path-${randomUUID()}.tmp`);
+			try {
+				writeFileSync(tmp, project, { flag: 'wx', mode: 0o600 });
+				// Publish a complete marker without overwriting another process's claim.
+				try {
+					linkSync(tmp, marker);
+				} catch (error) {
+					if (error.code !== 'EEXIST') throw error;
+				}
+			} finally {
+				rmSync(tmp, { force: true });
+			}
+		}
+		if (readFileSync(marker, 'utf8') === project) return root;
 	}
-	return root;
+	throw new Error('Cannot allocate a distinct artifact directory for this project');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

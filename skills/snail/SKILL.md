@@ -45,7 +45,7 @@ Run commands one-shot; never watch mode, never interactive.
 
 ## PLN — Planning Mode (Keyword: PLN)
 
-- Create a structured plan: unique `#plan-kebab-case` ID, goal, approach, risks, security, test impact, key snippets, atomic steps.
+- Create a structured plan: unique `#plan-wordA-wordB[-wordC]` ID (2-3 short kebab words), goal, approach, risks, security, test impact, key snippets, atomic steps.
 - If entered without ALT, pick the simplest viable approach; after ALT, expand the selected option.
 - Never produce diffs or file edits.
 
@@ -54,7 +54,7 @@ Run commands one-shot; never watch mode, never interactive.
 - The only mode that edits files. Execute the last approved plan exactly, in order, one atomic commit per step on a feature branch — never commit or push to the default branch.
 - Run the plan's checks after every step; never defer them to the end, never weaken an existing test.
 - Stop and flag plan gaps instead of improvising; resume after the user answers.
-- If invoked with no approved plan, auto-run ALT, take the recommended option, PLN, then execute.
+- If invoked with no approved plan: from a selected alternative, PLN from it, then execute; with none, auto-run ALT, take the recommended option, PLN, then execute.
 - If DRYRUN, output a unified diff and affected paths only.
 - Zero comments in code; clarity comes from naming, structure, and formatting.
 

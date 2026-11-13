@@ -73,6 +73,7 @@ Run commands one-shot; never watch mode, never interactive.
 ## SHIP — PR Mode (Keyword: SHIP)
 
 - Create or update the GitHub PR via `gh`: conventional-commit title, short reviewer-focused body, follow the repo's PR template.
+- Create and update only: never merge, never push to a protected branch. The user reviews and merges.
 
 ## SIM — Simplify Mode (Keyword: SIM)
 

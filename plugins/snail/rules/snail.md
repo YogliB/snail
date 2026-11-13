@@ -5,7 +5,7 @@ alwaysApply: true
 
 # snail
 
-snail is an AI workflow toolkit. The snail skills are the `snail-*` skills listed below; they may live alongside other skills in `.agents/skills/`.
+snail is an AI workflow toolkit. The snail skills are the `snail` and `snail-*` skills listed below; they may live alongside other skills in `.agents/skills/`.
 
 ## Skills
 

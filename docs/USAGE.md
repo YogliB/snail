@@ -88,12 +88,12 @@ Installed a single skill with `npx skills add`? Drop the prefix: `/snail-plannin
 
 ### Experimental: one skill for the whole workflow
 
-`snail` is a single short skill covering the same stages with mode keywords (QNA, INV, EXPLORE, ALT, PLN, EXC, REV, VERIFY, SHIP, SIM), in `manual` (stops for approval at each mode) or `auto`. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
+`snail` is a single short skill covering the same stages (QNA, INV, EXPLORE, ALT, PLN, EXC, REV, VERIFY, SHIP, SIM), picked up from plain language — no keywords to memorize. `manual` (default) stops for approval at each stage and never edits code until you approve the build; `auto` runs the whole chain, only when you ask. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
 
 ```text
 /snail:snail add-user-auth
 /snail:snail auto add-user-auth
-/snail:snail REV
+/snail:snail review this diff
 ```
 
 Run one workflow per task — this skill alone or the `snail-*` skills, never mixed — and record time, tokens, interventions, and outcome to compare the two.

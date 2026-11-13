@@ -13,7 +13,7 @@ description: Draft a self-contained executable technical plan with atomic testab
 
 ## Slug and flow folder
 
-From the project working directory, run `node <skill-dir>/scripts/artifact-path.mjs` using this skill's absolute installed path; quote its output as `<flow-root>`. It resolves project-specific `$XDG_STATE_HOME/snail` state (fallback `~/.local/state/snail`). Discover and write all workflow artifacts there, including standalone use. Pass `--in-repo` only on an explicit user request, never because old files or policy exist. Leave old artifacts untouched; ask before moving, deleting or resuming them. On errors stop, never fall back to the repo.
+From the project working directory, run `node <skill-dir>/scripts/artifact-path.mjs` using this skill's absolute installed path; store its output as `<flow-root>`. In every shell command double-quote expanded paths, e.g. `init "$flow_root/snail-$slug"`; for scans quote the root but leave the wildcard outside: `"$flow_root"/snail-*/`. It resolves project-specific `$XDG_STATE_HOME/snail` state (fallback `~/.local/state/snail`). Discover and write all workflow artifacts there, including standalone use. Pass `--in-repo` only on an explicit user request, never because old files or policy exist. Leave old artifacts untouched; ask before moving, deleting or resuming them. On errors stop, never fall back to the repo.
 
 1. If the user provided a slug, use `<flow-root>/snail-<slug>/`.
 2. If the user gave no clear context, look for a stuck flow: one where `1 - ALTERNATIVES.yaml` exists and `2 - PLANNING*.yaml` is missing. If one, suggest continuing it. If several, list them and ask. If none, derive a short kebab-case slug from the goal and confirm.
@@ -21,7 +21,7 @@ From the project working directory, run `node <skill-dir>/scripts/artifact-path.
 4. Create the runbook if missing: `node ../snail-flow/scripts/flow-state.mjs init <flow-root>/snail-<slug> --slug=<slug> --goal=<goal> --at=2`. If slug `review` is requested while the standalone review artifact (`<flow-root>/snail-review/4 - REVIEW.yaml`, no runbook) exists, do not `init` over it and do not delete the file: surface the collision and let the user pick a different slug or explicitly approve moving or removing it.
 5. Write a single-PR plan to `2 - PLANNING.yaml`, then `node ../snail-flow/scripts/flow-state.mjs advance <dir> --decision=proceed`, and `advance <dir> --valid=0` for row `2r` once the review loop's latest pass is clean.
 
-A standalone install has no `../snail-flow/scripts/flow-state.mjs` or templates — skip every `init`/`advance`/`check` call and work flow-less. For external artifacts no git ignore configuration is needed. With explicit `--in-repo` and no flow-state script, add the flow root's repo-relative path on its own line to `$(git rev-parse --git-common-dir)/info/exclude` before writing (escape gitignore special characters); warn if artifacts are already tracked. Do not change `.gitignore`.
+A standalone install has no `../snail-flow/scripts/flow-state.mjs` or templates — skip every `init`/`advance`/`check` call and work flow-less. For external artifacts no git ignore configuration is needed. With explicit `--in-repo` and no flow-state script, first check that `git rev-parse --git-common-dir` succeeds; outside git there is nothing to ignore. Inside git, add the flow root's repo-relative path on its own line to `$(git rev-parse --git-common-dir)/info/exclude` before writing (escape gitignore special characters); warn if artifacts are already tracked. Do not change `.gitignore`.
 
 ## Core requirements
 

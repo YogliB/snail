@@ -27,6 +27,7 @@ requireNode24('sync-devin-plugin');
 const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
 const plugin = join(root, 'plugins', 'snail');
 
+// Referencing the bundled resolver in SKILL.md declares the skill as a consumer.
 const artifactSkills = readdirSync(join(root, 'skills')).filter((skill) => {
 	const doc = join(root, 'skills', skill, 'SKILL.md');
 	return (

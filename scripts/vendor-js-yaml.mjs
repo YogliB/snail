@@ -27,7 +27,13 @@ const src = readFileSync(dist);
 let status = 0;
 for (const d of readdirSync(join(root, 'skills'))) {
 	const scriptsDir = join(root, 'skills', d, 'scripts');
-	if (!d.startsWith('snail-') || !existsSync(join(scriptsDir, 'vendor'))) continue;
+	if (!d.startsWith('snail-') || !existsSync(scriptsDir)) continue;
+	const consumesYaml = readdirSync(scriptsDir).some(
+		(file) =>
+			file.endsWith('.mjs') &&
+			readFileSync(join(scriptsDir, file), 'utf8').includes("'./vendor/js-yaml.mjs'"),
+	);
+	if (!consumesYaml) continue;
 	const target = join(scriptsDir, 'vendor', 'js-yaml.mjs');
 	if (check) {
 		if (!existsSync(target) || readFileSync(target).compare(src) !== 0) {

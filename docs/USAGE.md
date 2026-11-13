@@ -56,20 +56,20 @@ Use the snail-review skill on the current diff (say "fix" to also fix it).
 Use the snail-pr skill to open a pull request.
 ```
 
-| Skill                                                                     | Use when                              |
-| ------------------------------------------------------------------------- | ------------------------------------- |
-| [snail-explore](../skills/snail-explore/SKILL.md)                         | Understand the repo first.            |
-| [snail-alternatives](../skills/snail-alternatives/SKILL.md)               | You want options before deciding.     |
-| [snail-review-alternatives](../skills/snail-review-alternatives/SKILL.md) | Review a list of alternatives.        |
-| [snail-planning](../skills/snail-planning/SKILL.md)                       | You want an executable plan.          |
-| [snail-review-plan](../skills/snail-review-plan/SKILL.md)                 | A second opinion on a plan.           |
-| [snail-implement](../skills/snail-implement/SKILL.md)                     | You have an approved plan to execute. |
-| [snail-review](../skills/snail-review/SKILL.md)                           | Diff review; "fix" also fixes.        |
-| [snail-verify](../skills/snail-verify/SKILL.md)                           | Prove the changes work.               |
-| [snail-pr](../skills/snail-pr/SKILL.md)                                   | You want a PR.                        |
-| [snail-project-docs](../skills/snail-project-docs/SKILL.md)               | Scaffold a project's docs.            |
-| [snail-ai-toolbelt](../skills/snail-ai-toolbelt/SKILL.md)                 | Pointers to external tools and MCPs.  |
-| [snail-flow](../skills/snail-flow/SKILL.md)                               | The full workflow, end to end.        |
+| Skill                                                       | Use when                                    |
+| ----------------------------------------------------------- | ------------------------------------------- |
+| [snail-explore](../skills/snail-explore/SKILL.md)           | Understand the repo first.                  |
+| [snail-alternatives](../skills/snail-alternatives/SKILL.md) | Options with mandatory independent review.  |
+| [snail-planning](../skills/snail-planning/SKILL.md)         | An executable, independently reviewed plan. |
+| [snail-implement](../skills/snail-implement/SKILL.md)       | You have an approved plan to execute.       |
+| [snail-review](../skills/snail-review/SKILL.md)             | Diff review; "fix" also fixes.              |
+| [snail-verify](../skills/snail-verify/SKILL.md)             | Prove the changes work.                     |
+| [snail-pr](../skills/snail-pr/SKILL.md)                     | You want a PR.                              |
+| [snail-project-docs](../skills/snail-project-docs/SKILL.md) | Scaffold a project's docs.                  |
+| [snail-ai-toolbelt](../skills/snail-ai-toolbelt/SKILL.md)   | Pointers to external tools and MCPs.        |
+| [snail-flow](../skills/snail-flow/SKILL.md)                 | The full workflow, end to end.              |
+
+The separate `snail-review-alternatives` and `snail-review-plan` commands are folded into their parents. Ask `snail-alternatives` to review supplied options or `snail-planning` to review a supplied plan without rewriting it. Drafting with either parent still requires an independent review before delivery.
 
 ### Slash commands
 
@@ -121,8 +121,8 @@ Every flow is a self-contained folder:
 | #   | Skill                | Output                    | Gate                                                             |
 | --- | -------------------- | ------------------------- | ---------------------------------------------------------------- |
 | 0   | `snail-explore`      | `0 - EXPLORE.yaml`        | Artifact exists.                                                 |
-| 1   | `snail-alternatives` | `1 - ALTERNATIVES.yaml`   | `snail-review-alternatives` runs clean; user picks an option.    |
-| 2   | `snail-planning`     | `2 - PLANNING.yaml`       | `snail-review-plan` converges (`valid=0`), decision `proceed`.   |
+| 1   | `snail-alternatives` | `1 - ALTERNATIVES.yaml`   | Internal alternatives review runs clean; user picks an option.   |
+| 2   | `snail-planning`     | `2 - PLANNING.yaml`       | Internal plan review converges (`valid=0`), decision `proceed`.  |
 | 3   | `snail-implement`    | `3 - IMPLEMENTATION.yaml` | Passing receipts for the per-step checks.                        |
 | 4   | `snail-review`       | `4 - REVIEW.yaml`         | Valid findings resolved (`valid=0`).                             |
 | 5   | `snail-verify`       | `5 - VERIFY.yaml`         | `--result=pass` + receipts; `--skip --note=<reason>` if blocked. |

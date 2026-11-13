@@ -60,7 +60,9 @@ All authored scripts are Node with JSDoc — no `sh`/`awk` mix. YAML needs a rea
 
 ### Alternatives get reviewed before you see them
 
-`snail-alternatives` dispatches `snail-review-alternatives` to weed out irrelevant, duplicate, or weak options before they reach the user.
+`snail-alternatives` dispatches a read-only reviewer using its bundled `references/review.md` contract to weed out irrelevant, duplicate, or weak options before they reach the user.
+
+`snail-planning` likewise bundles its plan-review contract. Both parents keep independent reviews mandatory, including when installed alone; full flows retain the `1r` and `2r` zero-valid gates.
 
 ### Rules ship as files per channel
 

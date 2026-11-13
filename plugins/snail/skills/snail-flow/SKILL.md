@@ -88,9 +88,9 @@ Never reduce a phase to "write `<N> - <NAME>.yaml`" or a checklist of artifacts.
 
 1. **Explore** — `snail-explore`. Writes `0 - EXPLORE.yaml`; advances row `0`.
 2. (manual) Ask to continue.
-3. **Alternatives** — `snail-alternatives`, including its mandatory `snail-review-alternatives` pass. Writes `1 - ALTERNATIVES.yaml`; advances rows `1` and `1r`.
+3. **Alternatives** — `snail-alternatives`, including its mandatory internal alternatives review. Writes `1 - ALTERNATIVES.yaml`; advances rows `1` and `1r`.
 4. (manual) Ask to continue.
-5. **Plan** — `snail-planning`, including its mandatory `snail-review-plan` loop. Writes `2 - PLANNING.yaml`; advances rows `2` and `2r`.
+5. **Plan** — `snail-planning`, including its mandatory internal plan review loop. Writes `2 - PLANNING.yaml`; advances rows `2` and `2r`.
 6. (manual) Ask to continue.
 7. **Implement** — `snail-implement`. Writes `3 - IMPLEMENTATION.yaml`; advances row `3` with its receipts.
 8. (manual) Ask to continue.

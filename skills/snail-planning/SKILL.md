@@ -1,9 +1,13 @@
 ---
 name: snail-planning
-description: Draft a self-contained executable technical plan with atomic testable TODOs. Required context is inlined. Use for planning rules, validation, splits, or any CreatePlan-style output.
+description: Draft a self-contained executable technical plan with atomic testable TODOs. Required context is inlined. Includes mandatory independent review. Use for planning rules, review of supplied plans, validation, splits, or any CreatePlan-style output.
 ---
 
 # Planning
+
+## Review supplied text
+
+When the user asks only to review an existing plan, read `references/review.md` and dispatch a `readonly` `general-purpose` Task subagent with the full contract and supplied text. Do not self-review, draft, rewrite, create a flow or advance gates. Triage its findings using that protocol and return the findings only. Reviewers never rewrite; edits require an explicit request. Draft mode below always includes the mandatory independent review loop.
 
 ## When to use
 
@@ -84,9 +88,9 @@ The `complexity_check` fields `cross_deps` and total counts inform a `proceed` o
 
 ## Plan review loop (mandatory)
 
-After the plan matches the template and the pre-finalization pass is done, review every emitted document until the latest pass has zero `valid` findings. Dispatch, triage, false-positive carry-forward, exit rule, and stuck guard follow `../snail-review/references/review-core.md`.
+After the plan matches the template and the pre-finalization pass is done, review every emitted document until the latest pass has zero `valid` findings. Dispatch, triage, false-positive carry-forward, exit rule, and stuck guard follow `references/review.md`, including its fallback when the shared core is absent.
 
-1. **Review** — dispatch a new `readonly` `general-purpose` Task subagent and run the `snail-review-plan` skill on the full plan text (paste the plan; do not point at files).
+1. **Review** — read `references/review.md`, then dispatch a new `readonly` `general-purpose` Task subagent with its full review contract and the full plan text (paste both; do not point at files). Include repo constraints, scope, masterplan/sub-plan linkage, validation gaps and earlier false-positive records. Do not self-review or skip this step.
 2. **Triage** — label each finding `valid`, `false_positive`, or `unvalidated` with a one-line reason; act on `valid` only.
 3. **Fix** — resolve every `valid` finding before the next review. Prefer minimal edits; fix root causes. Re-run the lint with the same flags as the self-audit (`--masterplan` for a masterplan, `--allow-draft` for a draft); a plan that fails is not ready for the next review.
 4. **Repeat** — dispatch a new subagent on the updated plan, carrying forward the false-positive records from earlier passes, until the core exit rule is met.

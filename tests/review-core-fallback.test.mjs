@@ -6,10 +6,10 @@ import { join } from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
 
 const CORE = join(REPO_ROOT, 'skills/snail-review/references/review-core.md');
-const SKILLS = ['snail-review-plan', 'snail-review-alternatives'];
+const SKILLS = ['snail-planning', 'snail-alternatives'];
 
 function readSkill(name) {
-	return readFileSync(join(REPO_ROOT, 'skills', name, 'SKILL.md'), 'utf8');
+	return readFileSync(join(REPO_ROOT, 'skills', name, 'references/review.md'), 'utf8');
 }
 
 function fallbackOf(text) {

@@ -1,9 +1,13 @@
 ---
 name: snail-alternatives
-description: Suggest up to 3 viable alternatives for a code or design decision. Use when the user asks for alternatives, options, or "better ways".
+description: Suggest up to 3 viable alternatives for a code or design decision. Includes mandatory independent review. Use when the user asks for alternatives, options, "better ways", or review of supplied options.
 ---
 
 # Alternatives
+
+## Review supplied text
+
+When the user asks only to review existing alternatives, read `references/review.md` and dispatch a `readonly` `general-purpose` Task subagent with the full contract and supplied text. Do not self-review, draft, rewrite, create a flow or advance gates. Triage its findings using that protocol and return the findings only. Reviewers never rewrite; edits require an explicit request. Draft mode below always includes the mandatory independent review loop.
 
 ## Slug and flow folder
 
@@ -20,9 +24,9 @@ This skill can run on its own; it still maintains the flow folder and runbook wh
 
 1. **Identify** — up to 3 distinct approaches. If only one is viable, document that in `1 - ALTERNATIVES.yaml` and still produce the file.
 2. **Present** — for each option: idea, snippet (if relevant), pros, cons.
-3. **Review** — dispatch a `readonly` `general-purpose` Task subagent and run the `snail-review-alternatives` skill on the options text (paste the options; do not point at files). Do not self-review or skip this step. Triage each finding per `../snail-review/references/review-core.md` — act on `valid` only and carry false-positive records into the next pass. Resolve every `valid` finding and re-review. Continue until the latest pass has zero `valid` findings after triage.
+3. **Review** — read `references/review.md`, then dispatch a `readonly` `general-purpose` Task subagent with its full review contract and the options text (paste both; do not point at files). Include the goal, constraints, recommendation and prior false-positive records. Do not self-review or skip this step. Triage each finding per the protocol in `references/review.md` — act on `valid` only and carry false-positive records into the next pass. Resolve every `valid` finding and re-review. Continue until the latest pass has zero `valid` findings after triage.
 
-    **Exit rule:** stop when the latest `snail-review-alternatives` pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`). **Stuck guard:** if the same `valid` finding persists after 3 passes, stop and report the blocker.
+    **Exit rule:** stop when the latest alternatives review pass is `Lean & valid. Ship.` or has zero `valid` findings after triage (all `false_positive` or all `unvalidated`). **Stuck guard:** if the same `valid` finding persists after 3 passes, stop and report the blocker.
 
 4. **Recommend** — one clear choice based on clarity and maintainability.
 5. **Write** — save options, review findings (with triage counts), recommendation, and decision to `1 - ALTERNATIVES.yaml`.
@@ -40,7 +44,7 @@ This skill can run on its own; it still maintains the flow folder and runbook wh
 
 ## Alternatives review contract
 
-`snail-review-alternatives` returns the disclosure header plus one `### Alternatives Review Findings` block — `option:<n>: <tag>: <problem>. <fix>` lines, a `totals:` line ending in `verdict: pass / needs-revision`, or `Lean & valid. Ship.` when clean. Tags: `irrelevant`, `duplicate`, `weak`, `strawman`, `missing-context`, `unjustified`. Full contract and triage rules: `../snail-review-alternatives/SKILL.md` plus `../snail-review/references/review-core.md`.
+Read `references/review.md` for the complete reviewer input, findings format, criteria and standalone protocol fallback.
 
 ## Example
 

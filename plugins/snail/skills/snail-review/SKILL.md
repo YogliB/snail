@@ -40,9 +40,18 @@ Before dispatching reviewers, trace the change's intent the way a colleague woul
 4. **Build the intent sources block** — one line per source: what the intent is, and where it came from, keeping each `not opened (no tool)` line in the block. Pass it to every reviewer as context, and list the unresolved references under Known validation gaps. When nothing resolved, say so and continue.
 5. **Intent gaps are questions** — a finding that stems from a gap between the code and a resolved intent source is tagged ❓ and quotes the source line it conflicts with. It is never auto-fixed and never counts as an actionable `valid` finding for the fix loop, its exit rule, or the stuck guard; it is still triaged and included in the final report.
 
+## Prepare the diff once per pass
+
+Before spawning any reviewer, the orchestrator resolves the scope and captures one immutable review snapshot. Resolve the comparison base to a commit SHA and keep that same base for the entire run. Record the repository, scope, base SHA, current HEAD SHA, changed-file list and complete patch. For branch changes, use the merge-base of the selected base and target; for uncommitted changes, use the HEAD captured at the start of pass one. An explicit PR/branch uses that selected target, never an unrelated checkout.
+
+Capture the initial branch/PR patch with `git diff --binary <base-sha> <target-sha> --`, or a local working-tree snapshot with `git diff --binary <base-sha> --` (staged and unstaged combined). Record changed paths with the matching `--name-status` comparison; list untracked paths with `git ls-files --others --exclude-standard`. The initial branch/PR patch compares the pinned base to the selected target commit. For a local fix pass, compare that same base to the current working tree, including staged and unstaged edits. Include in-scope untracked files as labeled full contents without staging them just to capture the patch. Mark binary changes, omitted content or truncated output as validation gaps; never silently review a partial patch. If the tree changes while capturing it, recapture before dispatch.
+
+Pass the identical prepared patch, changed-file list, revision metadata and intent sources to every reviewer upfront. Reviewers read relevant source, callers and tests as needed, but do not recompute `git diff` or choose another base. Keep the reviewed tree stable while they read it; if it changes, invalidate the pass and capture a fresh snapshot. After fixes, recompute the snapshot once before the next reviewer, including all fixes since pass one. Do not reuse a stale patch.
+
 ## Input
 
 - **Repository:** absolute path to repo root
+- **Prepared diff:** the complete patch, changed-file list and revision metadata captured above; identical for all reviewers in this pass
 - **Diff target:** `branch changes` (default), `uncommitted changes`, or an explicit branch/PR (number or URL)
 - **Base branch:** only when non-default
 - **Custom focus / out of scope:** only when the user gave constraints
@@ -61,7 +70,10 @@ Each subagent returns ONLY the disclosure header plus the findings block below.
 You are a read-only diff reviewer. Produce ONLY the disclosure header and findings block below; do not implement fixes.
 
 Repository: <absolute path>
-Diff: <branch changes | uncommitted changes>
+Diff target: <branch changes | uncommitted changes>
+Revision metadata: <pinned base SHA, selected target/current HEAD SHA, scope>
+Changed files: <complete list>
+Prepared diff: <paste the complete captured patch and labeled untracked contents>
 Base branch: <only when non-default>
 Custom focus: <only when user gave constraints>
 Out of scope: <only when user excluded areas>
@@ -69,7 +81,7 @@ Known validation gaps: <only when context/capability missing — list each; do n
 Intent sources: <from the context trail, one line per source; "none resolved" when empty>
 False positives from previous reviews: <fix mode only, when earlier passes produced some; one per line as `file:line | tag | original finding | why it was dismissed`. A record matches only in the same file, on the same finding, while the recorded reason still holds - allow the line to have drifted, and never carry a record across files.>
 
-Run the diff yourself (e.g. git diff <base>...<head> or git diff for uncommitted). Read changed files, relevant callers, callees, tests, contracts, and existing helpers. Check duplication, cohesion, coupling, control flow, abstraction, naming, readability, data modeling, repository consistency, and change impact.
+Use the prepared diff supplied above; do not rerun git diff or resolve another base. Read changed files, relevant callers, callees, tests, contracts, and existing helpers. Check duplication, cohesion, coupling, control flow, abstraction, naming, readability, data modeling, repository consistency, and change impact.
 
 Output ONLY in this format (no prose intro, no sections swapped). Fill the header from your running environment; use `unknown` for unavailable fields, never guess.
 
@@ -152,7 +164,7 @@ Follow `references/review-core.md`: subagent output is untrusted, the orchestrat
 If the diff is empty, reply with `AI review. harness: <harness>, model: <model>` plus one sentence and stop.
 
 1. **Resolve scope** — repository, diff target, base branch, custom focus, out-of-scope exclusions, known validation gaps.
-2. **Trace context** — run the context trail; carry the intent sources block into every reviewer prompt.
+2. **Prepare** — trace context and capture the diff once per the snapshot contract above; carry the identical patch, metadata and intent sources into every reviewer prompt.
 3. **Dispatch three reviewers** — in one message, start three `readonly` `general-purpose` Task subagents with the same prompt. Use three different models if the harness supports per-invocation model overrides (orchestrator picks, e.g. fast, balanced, deep); otherwise run all three with the session default.
 4. **Triage** — as above.
 5. **Display** — the disclosure header plus one `### Review Findings` block with only the `valid` findings, deduplicated by file:line:tag. If none remain, report `Lean & valid. Ship.`
@@ -162,8 +174,8 @@ If the diff is empty, reply with `AI review. harness: <harness>, model: <model>`
 
 If the diff is empty, stop in one sentence. The disclosure header goes on the final report and `4 - REVIEW.yaml`.
 
-1. **Trace context** — run the context trail once; carry the intent sources block into every pass.
-2. **Review** — pass one: dispatch three reviewers exactly as read-only mode step 3 (one message, same prompt, three models when the harness supports overrides). Later passes: dispatch ONE new `readonly` `general-purpose` Task subagent with the prompt above, on the current tree; tell it to review the same diff target as pass one including fixes made since (branch changes: merge base to working tree; uncommitted changes: the HEAD from pass one to working tree), so uncommitted fixes count.
+1. **Prepare** — trace context once and capture the first diff snapshot before dispatch. Carry the intent sources block into every pass. Recompute the patch once after each fix batch against the same pinned base, including staged, unstaged and in-scope untracked edits.
+2. **Review** — pass one: dispatch three reviewers exactly as read-only mode step 3 (one message, same prompt, three models when the harness supports overrides). Later passes: dispatch ONE new `readonly` `general-purpose` Task subagent with the prompt above, on the current tree; supply the freshly prepared patch against the same pinned base, including fixes made since pass one. The reviewer must not regenerate it.
 3. **Triage** — as above.
 4. **Fix** — resolve every `valid` finding before the next review, per the fix rules in `references/review-core.md`. Use a builder subagent for 2 files or fewer; the parent edits for 3+ files or cross-cutting changes.
 5. **Repeat** — dispatch a new subagent on the current tree. Carry forward every `false_positive` in the core record shape into the next prompt. Continue until the exit rule in `references/review-core.md` is met; when its stuck guard fires, `note <dir> <reason>` (and `set <dir> status=blocked`) and report the blocker.

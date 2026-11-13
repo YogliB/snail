@@ -1,6 +1,6 @@
 # Review core
 
-Protocol shared by every snail review skill (`snail-review`, `snail-review-plan`, `snail-review-alternatives`). Each domain skill defines its own input, reviewer prompt, location format, tags, criteria, and output destination; everything here applies to all of them.
+Protocol shared by every snail review skill (`snail-review` and the internal reviews in `snail-planning` and `snail-alternatives`). Each domain skill defines its own input, reviewer prompt, location format, tags, criteria, and output destination; everything here applies to all of them.
 
 ## Disclosure header
 
@@ -41,7 +41,7 @@ Or exactly when no findings:
 Lean & valid. Ship.
 ```
 
-- Sort findings deterministically; the domain skill chooses the key. Some domains (e.g. `snail-review`, `snail-review-plan`) prefix the tag with an emoji; others use plain tags.
+- Sort findings deterministically; the domain skill chooses the key. Some domains (e.g. `snail-review`, internal plan review) prefix the tag with an emoji; others use plain tags.
 - One finding per line; problem then fix separated by `". "`.
 - Report only concrete violations: a real failure, maintenance cost, or a smaller replacement. No style-only nits outside project norms, no length or size counts by themselves.
 - Do not re-report a finding carried forward as a false positive while its recorded reason still holds; report it when the reason no longer applies or it appears in a different location — note the changed premise.

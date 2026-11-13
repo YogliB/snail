@@ -27,7 +27,7 @@ const src = readFileSync(dist);
 let status = 0;
 for (const d of readdirSync(join(root, 'skills'))) {
 	const scriptsDir = join(root, 'skills', d, 'scripts');
-	if (!d.startsWith('snail-') || !existsSync(scriptsDir)) continue;
+	if (!d.startsWith('snail-') || !existsSync(join(scriptsDir, 'vendor'))) continue;
 	const target = join(scriptsDir, 'vendor', 'js-yaml.mjs');
 	if (check) {
 		if (!existsSync(target) || readFileSync(target).compare(src) !== 0) {

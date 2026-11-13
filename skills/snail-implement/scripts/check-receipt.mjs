@@ -73,7 +73,9 @@ if (!head) fail('missing git-head');
 if (!('output' in doc)) fail('missing output');
 
 if (checkHead) {
-	const g = spawnSync('git', ['-C', dirname(receipt), 'rev-parse', 'HEAD'], { encoding: 'utf8' });
+	const g = spawnSync('git', ['-C', get('cwd') || dirname(receipt), 'rev-parse', 'HEAD'], {
+		encoding: 'utf8',
+	});
 	if (g.status === 0) {
 		const current = g.stdout.trim();
 		if (head !== current) fail(`receipt was recorded on ${head}, current HEAD is ${current}`);

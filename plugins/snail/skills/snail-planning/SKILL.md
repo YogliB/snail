@@ -13,13 +13,15 @@ description: Draft a self-contained executable technical plan with atomic testab
 
 ## Slug and flow folder
 
-1. If the user provided a slug, use `.agents/flows/snail-<slug>/`.
+From the project working directory, run `node <skill-dir>/scripts/artifact-path.mjs` using this skill's absolute installed path; quote its output as `<flow-root>`. It resolves project-specific `$XDG_STATE_HOME/snail` state (fallback `~/.local/state/snail`). Discover and write all workflow artifacts there, including standalone use. Pass `--in-repo` only on an explicit user request, never because old files or policy exist. Leave old artifacts untouched; ask before moving, deleting or resuming them. On errors stop, never fall back to the repo.
+
+1. If the user provided a slug, use `<flow-root>/snail-<slug>/`.
 2. If the user gave no clear context, look for a stuck flow: one where `1 - ALTERNATIVES.yaml` exists and `2 - PLANNING*.yaml` is missing. If one, suggest continuing it. If several, list them and ask. If none, derive a short kebab-case slug from the goal and confirm.
-3. Create `.agents/flows/snail-<slug>/` if needed.
-4. Create the runbook if missing: `node ../snail-flow/scripts/flow-state.mjs init .agents/flows/snail-<slug> --slug=<slug> --goal=<goal> --at=2`. If slug `review` is requested while the standalone review artifact (`.agents/flows/snail-review/4 - REVIEW.yaml`, no runbook) exists, do not `init` over it and do not delete the file: surface the collision and let the user pick a different slug or explicitly approve moving or removing it.
+3. Create `<flow-root>/snail-<slug>/` if needed.
+4. Create the runbook if missing: `node ../snail-flow/scripts/flow-state.mjs init <flow-root>/snail-<slug> --slug=<slug> --goal=<goal> --at=2`. If slug `review` is requested while the standalone review artifact (`<flow-root>/snail-review/4 - REVIEW.yaml`, no runbook) exists, do not `init` over it and do not delete the file: surface the collision and let the user pick a different slug or explicitly approve moving or removing it.
 5. Write a single-PR plan to `2 - PLANNING.yaml`, then `node ../snail-flow/scripts/flow-state.mjs advance <dir> --decision=proceed`, and `advance <dir> --valid=0` for row `2r` once the review loop's latest pass is clean.
 
-A standalone install has no `../snail-flow/scripts/flow-state.mjs` or templates — skip every `init`/`advance`/`check` call and work flow-less. Before writing artifacts, add the flow dir's repo-root-relative path (usually `.agents/flows/`) on its own line to the repo's exclude file (`$(git rev-parse --git-common-dir)/info/exclude`, usually `.git/info/exclude`) if it is not there already (backslash-escaping any gitignore special characters in the path), so flow artifacts stay out of git without adding any file to the repo, the same rule `init` adds; outside a git repo there is nothing to ignore. If any flow files are already tracked, warn the user: ignore rules will not untrack them.
+A standalone install has no `../snail-flow/scripts/flow-state.mjs` or templates — skip every `init`/`advance`/`check` call and work flow-less. For external artifacts no git ignore configuration is needed. With explicit `--in-repo` and no flow-state script, add the flow root's repo-relative path on its own line to `$(git rev-parse --git-common-dir)/info/exclude` before writing (escape gitignore special characters); warn if artifacts are already tracked. Do not change `.gitignore`.
 
 ## Core requirements
 
@@ -104,13 +106,13 @@ Planning covers what to build, how to sequence it, delivery shape, and plan revi
 
 ### Single PR
 
-- Plan: `.agents/flows/snail-<slug>/2 - PLANNING.yaml`
+- Plan: `<flow-root>/snail-<slug>/2 - PLANNING.yaml`
 - `advance <dir> --decision=proceed` and `advance <dir> --valid=0` (row `2r`).
 
 ### Multiple PRs
 
-- Masterplan: `.agents/flows/snail-<slug>/2 - PLANNING.yaml` naming every PR and its slug.
-- Each PR is its own flow: `node ../snail-flow/scripts/flow-state.mjs init .agents/flows/snail-<pr-slug> --slug=<pr-slug> --goal=<goal> --at=2`, then write that flow's `2 - PLANNING.yaml` from `templates/plan.yaml` and advance it normally. PRs run one at a time, in masterplan order.
+- Masterplan: `<flow-root>/snail-<slug>/2 - PLANNING.yaml` naming every PR and its slug.
+- Each PR is its own flow: `node ../snail-flow/scripts/flow-state.mjs init <flow-root>/snail-<pr-slug> --slug=<pr-slug> --goal=<goal> --at=2`, then write that flow's `2 - PLANNING.yaml` from `templates/plan.yaml` and advance it normally. PRs run one at a time, in masterplan order.
 - Do not emit suffixed `2 - PLANNING-*.yaml` files. Each flow has one unambiguous `2 - PLANNING.yaml`.
 
 Do not commit or push unless requested.

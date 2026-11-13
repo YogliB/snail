@@ -13,19 +13,19 @@
 
 ## Review or PR skills miss context
 
-- They expect `.agents/flows/snail-<slug>/` with a `runbook.yaml` and a `2 - PLANNING.yaml`. Missing either? They note it under `Known validation gaps` and keep going.
+- They expect `<flow-root>/snail-<slug>/` with a `runbook.yaml` and a `2 - PLANNING.yaml`. Missing either? They note it under `Known validation gaps` and keep going.
 
 ## Node errors
 
 - `node: command not found` or `Node 24+ (current LTS) is required` — the gates and toolkit scripts need Node 24+. Install the current LTS from https://nodejs.org/ and re-run. Nothing else is needed: the YAML parser is vendored inside each skill.
 
-## An old flow lives under sk-<slug>
+## Existing repo-local flows
 
-Flows started before the rename used `.agents/flows/sk-<slug>/`. Skills resolve only `snail-<slug>` now — rename the dir to continue it: `mv .agents/flows/sk-<slug> .agents/flows/snail-<slug>`. The `.agents/flows/` exclude rule keeps ignoring `sk-*` dirs, so nothing else is needed.
+Old versions stored flows under `.agents/flows/` (and used `sk-<slug>` before the rename). New runs default to the XDG state directory printed by `node <installed-skill>/scripts/artifact-path.mjs`. Old files and git ignore rules are left untouched. Ask explicitly to resume an old flow in place or move it before continuing; an existing folder does not opt a new task into repo-local storage.
 
-## Flows stay ignored after deleting the exclude line
+## Artifact root errors
 
-Installs initialized before the exclude change have `.agents/.gitignore` with a `flows/` line, which keeps ignoring flows on its own. Delete that line (or the file) as well.
+Unset, empty and relative `XDG_STATE_HOME` values use `~/.local/state`. An absolute value inside the project (including a symlink into it) is rejected: choose an external state directory, or explicitly request repo-local output. If the external directory is unwritable, fix its permissions; do not silently fall back to the checkout.
 
 ## Runbook errors
 

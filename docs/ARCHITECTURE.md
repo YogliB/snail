@@ -11,7 +11,6 @@ A cross-agent toolkit: reusable skills, plus an optional multi-phase workflow on
 │   ├── snail-implement/        #   + receipt scripts
 │   ├── snail-planning/         #   + lint-plan.mjs + plan templates
 │   └── snail-*/                #   explore, alternatives, review-*, verify, pr, ...
-├── .agents/flows/           # Flow dirs (snail-*, excluded by default)
 ├── rules/                   # Shared rules, shipped in the Cursor and Devin plugins
 ├── .cursor-plugin/          # Cursor manifest (repo root is the plugin)
 ├── .claude-plugin/          # Claude Code manifest
@@ -44,13 +43,14 @@ Each `skills/snail-*/SKILL.md` is the one definition of what that skill does. Ev
 
 ### The gate is a cursor, not a state machine
 
-Every flow lives in `.agents/flows/snail-<slug>/`: a `runbook.yaml`, the numbered phase YAML artifacts, and `receipts/` — one self-contained bundle. One runbook-less resident shares the namespace: `.agents/flows/snail-review/`, the fixed standalone review location (no runbook, latest standalone review only). It is not a flow — scans skip folders without a `runbook.yaml`.
+Every flow lives in `<flow-root>/snail-<slug>/`: a `runbook.yaml`, the numbered phase YAML artifacts, and `receipts/` — one self-contained bundle. One runbook-less resident shares the namespace: `<flow-root>/snail-review/`, the fixed standalone review location (no runbook, latest standalone review only). It is not a flow — scans skip folders without a `runbook.yaml`.
 
 - `at` is the cursor; `rows.<row>.*` records what each `advance` captured.
 - Four commands: `init`, `check`, `advance` (the only structural mutation — it refuses until the row's artifact exists and its required flags pass), `note` (append-only), and `set` (repair hatch).
 - Agents never hand-edit the runbook; the script (`skills/snail-flow/scripts/flow-state.mjs`) owns it.
 - Everything the flow produces is YAML: the runbook, the phase artifacts, the receipts. The gate parses artifact YAML with the vendored parser, so a malformed artifact fails the check instead of passing silently.
-- `init` adds `.agents/flows/` to the repo's `.git/info/exclude` so flows stay private without entering git status; delete that line to commit them.
+- `<flow-root>` is resolved by the bundled `scripts/artifact-path.mjs`: `$XDG_STATE_HOME/snail/projects/<project-id>/flows` (fallback `~/.local/state/snail/...`). It is outside the checkout by default. Only an explicit user request enables `--in-repo`. Existing repo artifacts are left untouched.
+- Each new runbook records `project-root`, so external receipts still compare git metadata against the source checkout, not the state directory. Run gate commands from the project working directory.
 
 What the gate guarantees, and nothing more: fixed phase order, artifact must exist and parse, review can't close with valid findings, verify can't close without a passing receipt.
 

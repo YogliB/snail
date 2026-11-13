@@ -63,7 +63,7 @@ Installed a skill individually with `npx skills add`? Drop the `/snail:` prefix 
 
 | Slash command                  | What it does                                                                         |
 | ------------------------------ | ------------------------------------------------------------------------------------ |
-| `/snail:snail-explore <slug>`  | Gather context and write `0 - EXPLORE.yaml` to `.agents/flows/snail-<slug>/`.        |
+| `/snail:snail-explore <slug>`  | Gather context and write `0 - EXPLORE.yaml` to `<flow-root>/snail-<slug>/`.          |
 | `/snail:snail-alternatives`    | Generate and review options, then write `1 - ALTERNATIVES.yaml`.                     |
 | `/snail:snail-planning <slug>` | Write an executable `2 - PLANNING.yaml`.                                             |
 | `/snail:snail-implement`       | Execute an approved plan, writing `3 - IMPLEMENTATION.yaml`.                         |
@@ -103,12 +103,20 @@ Use the snail-pr skill to open a pull request.
 snail-explore → snail-alternatives → snail-planning → snail-implement → snail-review (fix mode) → snail-verify → snail-pr
 ```
 
-Each phase writes a numbered YAML artifact into `.agents/flows/snail-<slug>/`, so you can pause, resume, or hand the work to another agent without losing context.
+Each phase writes a numbered YAML artifact into `<flow-root>/snail-<slug>/`, so you can pause, resume, or hand the work to another agent without losing context.
+
+## Artifact storage
+
+`node <installed-skill>/scripts/artifact-path.mjs` prints the project-specific artifact root. It uses `$XDG_STATE_HOME/snail/projects/<project-id>/flows`, falling back to `~/.local/state/snail/projects/<project-id>/flows`. Relative XDG values are ignored. The project ID hashes its canonical checkout path: subdirectories and symlinks share a root, while different checkouts and worktrees stay separate. Outside git, the current directory identifies the project. Run all gates and verification commands from that project, passing the absolute flow directory.
+
+Only an explicit request from the user enables `--in-repo`, which resolves to `.agents/flows`. Existing repo artifacts are never automatically moved, deleted, resumed, or treated as opt-in. For an old flow, explicitly choose whether to resume it in place or move it; the normal default starts outside the repo. An unwritable external directory is an error, not a reason to write into the repo.
+
+The storage rule covers snail workflow byproducts. Requested project deliverables such as README files remain in the project, and review-plan/review-alternatives return findings to their caller rather than choosing a separate output path.
 
 ## Caveats
 
 - **Slash commands work in Claude Code and Devin.** In Devin they come from the plugin and are namespaced (`/snail:snail-*`). Cursor can use the skill names.
-- **Flow runbooks are not committed by default.** Commit them only if your policy wants them.
+- **Generated artifacts stay outside your repository.** Plans, reports, runbooks and receipts use the XDG state directory by default. Repo-local output requires an explicit user request.
 - **Skills are modular.** Nothing forces the full flow. Pick one skill and ignore the rest.
 - **Rules ship inside the Cursor and Devin plugins** from the shared `rules/` directory. Claude Code plugins have no rules channel — `scripts/install-claude-rules.mjs` copies the rules into `~/.claude/snail/` and `@`-imports them from `~/.claude/CLAUDE.md`, which also reaches subagent context.
 

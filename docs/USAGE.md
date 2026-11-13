@@ -95,14 +95,14 @@ snail-explore → snail-alternatives → snail-planning → snail-implement → 
 
 `snail-flow` sizes the work first. A small change (a few files, no new dependency, interface, or security-sensitive code, obvious approach) takes the light path — plan, implement, verify, PR — with explore, alternatives, and the review rows skipped. Hotfix? Skip the flow entirely.
 
-Prerequisites: a clean git tree or feature branch, write access to `.agents/flows/`, and an authenticated `gh` for the PR step.
+Prerequisites: a clean git tree or feature branch, write access to `<flow-root>/`, and an authenticated `gh` for the PR step.
 
 ### Flow folder
 
 Every flow is a self-contained folder:
 
 ```text
-.agents/flows/snail-<slug>/
+<flow-root>/snail-<slug>/
 ├── runbook.yaml     # state: `at` is the cursor, `rows.*` the gate fields
 ├── receipts/        # YAML receipts: proof a check ran and passed
 ├── 0 - EXPLORE.yaml
@@ -114,7 +114,7 @@ Every flow is a self-contained folder:
 └── 6 - PR.yaml
 ```
 
-`init` adds `.agents/flows/` to the repo's `.git/info/exclude` — flows stay private without anything entering git status; delete that line to commit them. Agents mutate `runbook.yaml` only via `node skills/snail-flow/scripts/flow-state.mjs` (Node 24+); the contract lives in [ARCHITECTURE.md](ARCHITECTURE.md).
+`<flow-root>` comes from `node <installed-skill>/scripts/artifact-path.mjs`, run from the project. It is a project-specific directory under `$XDG_STATE_HOME/snail` (fallback `~/.local/state/snail`), not a directory in the checkout. Only an explicit user request enables `--in-repo`. Existing artifacts are left untouched; there is no automatic migration or legacy-root discovery. Agents mutate `runbook.yaml` only via `node skills/snail-flow/scripts/flow-state.mjs` (Node 24+); the contract lives in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ### Phases
 
@@ -130,7 +130,7 @@ Every flow is a self-contained folder:
 
 ### Standalone entry
 
-Every skill works alone — even a single-skill install. When `../snail-flow/scripts/flow-state.mjs` is absent, skills skip every gate call and run flow-less. When it is present, `snail-explore`, `snail-alternatives`, and `snail-planning` self-start a flow via `init <dir> --slug=<s> --goal=<g> --at=<row>`; earlier rows are marked skipped with a `standalone entry` note. Downstream skills (`snail-implement`, `snail-verify`, `snail-pr`) need the previous phase's artifact, so they join a flow already in progress. `snail-review` runs flow-less either way; without a matching flow its only artifact goes to the fixed standalone location `.agents/flows/snail-review/4 - REVIEW.yaml` (no runbook, overwritten by each standalone review).
+Every skill works alone — even a single-skill install. When `../snail-flow/scripts/flow-state.mjs` is absent, skills skip every gate call and run flow-less. When it is present, `snail-explore`, `snail-alternatives`, and `snail-planning` self-start a flow via `init <dir> --slug=<s> --goal=<g> --at=<row>`; earlier rows are marked skipped with a `standalone entry` note. Downstream skills (`snail-implement`, `snail-verify`, `snail-pr`) need the previous phase's artifact, so they join a flow already in progress. `snail-review` runs flow-less either way; without a matching flow its only artifact goes to the fixed standalone location `<flow-root>/snail-review/4 - REVIEW.yaml` (no runbook, overwritten by each standalone review).
 
 ### Rollback
 
@@ -145,7 +145,7 @@ Read the phase table, then open the matching `skills/snail-*/SKILL.md` by hand b
 
 ## Layout
 
-- Plans and flow docs live in `.agents/flows/snail-<slug>/`.
+- Plans and flow docs live in `<flow-root>/snail-<slug>/`.
 - Shared rules live in `rules/` and ship inside the Cursor and Devin plugins.
 - The Devin plugin lives in `plugins/snail/`; `scripts/sync-devin-plugin.mjs` syncs `skills/` and `rules/` into it.
 - The Cursor plugin is the repo root: `.cursor-plugin/plugin.json` plus `skills/` and `rules/`.
@@ -154,7 +154,7 @@ Read the phase table, then open the matching `skills/snail-*/SKILL.md` by hand b
 ## Example session
 
 ```text
-/snail-planning add-auth-token      # writes .agents/flows/snail-add-auth-token/2 - PLANNING.yaml
+/snail-planning add-auth-token      # writes <flow-root>/snail-add-auth-token/2 - PLANNING.yaml
 /snail-review fix                   # reviews and fixes the diff
 /snail-pr                           # opens the PR
 ```

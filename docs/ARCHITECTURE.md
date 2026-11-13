@@ -7,6 +7,7 @@ A cross-agent toolkit: reusable skills, plus an optional multi-phase workflow on
 ```text
 ./
 ├── skills/                  # Source of truth for all agents
+│   ├── snail/                  #   experimental single-skill workflow
 │   ├── snail-flow/             #   the workflow + flow-state.mjs gate + templates
 │   ├── snail-implement/        #   + receipt scripts
 │   ├── snail-planning/         #   + lint-plan.mjs + plan templates

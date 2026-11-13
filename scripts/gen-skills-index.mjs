@@ -37,7 +37,11 @@ function skillLine(path) {
 
 // Sort full paths (not bare dir names) so ordering matches the legacy shell glob.
 const list = readdirSync(join(root, 'skills'))
-	.filter((d) => d.startsWith('snail-') && existsSync(join(root, 'skills', d, 'SKILL.md')))
+	.filter(
+		(d) =>
+			(d === 'snail' || d.startsWith('snail-')) &&
+			existsSync(join(root, 'skills', d, 'SKILL.md')),
+	)
 	.map((d) => join(root, 'skills', d, 'SKILL.md'))
 	.sort()
 	.map((f) => skillLine(f))

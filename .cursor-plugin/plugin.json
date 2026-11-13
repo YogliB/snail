@@ -1,6 +1,6 @@
 {
 	"name": "snail",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "Reusable agent skills, rules, and an optional stage-gated workflow for Cursor.",
 	"author": {
 		"name": "Yogev Boaron Ben-Har"

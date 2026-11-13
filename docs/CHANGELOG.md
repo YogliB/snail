@@ -4,6 +4,10 @@ All notable user-facing changes to snail are documented in this file.
 
 ## Unreleased
 
+## [0.0.8] - 2026-11-13
+
+### Changed
+
 - Keep generated plans, reports and workflow history outside the project by default, under a readable `<project>-<short-id>` folder in the XDG state directory. Saving them in the repository now requires an explicit request.
 
 ## [0.0.7] - 2026-11-05

@@ -10,7 +10,6 @@ Reusable agent skills and an optional stage-gated workflow.
 
 ## Skills
 
-- skills/snail/SKILL.md
 - skills/snail-ai-toolbelt/SKILL.md
 - skills/snail-alternatives/SKILL.md
 - skills/snail-alternatives/references/review.md
@@ -25,6 +24,7 @@ Reusable agent skills and an optional stage-gated workflow.
 - skills/snail-project-docs/SKILL.md
 - skills/snail-review/SKILL.md
 - skills/snail-verify/SKILL.md
+- skills/snail/SKILL.md
 
 ## Rules
 

@@ -36,6 +36,7 @@ Run commands one-shot; never watch mode, never interactive.
 - Gather repo context for new work: relevant files, patterns, constraints, open questions, risks.
 - Output a short summary the next stages can rely on.
 - Never produce diffs or file edits.
+- Before stopping: if a decision that changes what gets built is still open, list the open decisions as numbered questions, each with your recommended answer worded so yes accepts it. Skip the list when nothing material is open.
 
 ## ALT — Alternatives
 
@@ -47,6 +48,8 @@ Run commands one-shot; never watch mode, never interactive.
 
 - Create a structured plan: unique `#plan-wordA-wordB[-wordC]` ID (2-3 short kebab words), goal, approach, risks, security, test impact, key snippets, atomic steps.
 - If reached without ALT, pick the simplest viable approach; after ALT, expand the selected option.
+- Verification clarity is part of the plan: if it is not clear how to exercise the finished feature the way a user would check it, stop - ask the user how verification should look and offer to document the agreed method in the project's own docs (project documentation, agent docs, or a project skill - whatever fits), not in flow-internal files. The plan is not ready while verification is unclear. If there is no answer (the question is canceled or cannot be asked), stay stopped: report the plan as blocked on verification clarity and end there - never guess a verification method.
+- Before stopping: same decision-round rule as EXPLORE - numbered open decisions with recommended answers, only when a material decision is still open.
 - Never produce diffs or file edits.
 
 ## EXC — Execution
@@ -69,6 +72,7 @@ Run commands one-shot; never watch mode, never interactive.
 
 - Exercise the change end-to-end the way a user hits it, not only the test suite.
 - No real-world side effects (messages, posts, purchases, bookings) without explicit user approval; exercise locally or against sandboxes.
+- Observed feature behavior decides; receipts, logs and test results only support it. If you do not know how to exercise the feature the way a user hits it, stop - clarify with the user and offer to record the method in the project's own docs (never in flow-internal files). If there is no answer (the question is canceled or cannot be asked), stay stopped and report the verification as blocked - never guess a method. Never declare PASS without observed feature behavior.
 - Report each step and an overall PASS or FAIL; stop on the first failure.
 - Never auto-fix failures. SHIP only after a PASS.
 

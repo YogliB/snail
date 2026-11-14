@@ -4,6 +4,10 @@ All notable user-facing changes to snail are documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- `snail-verify` now stops before running anything when it is not clear how to exercise the feature the way a user hits it: it asks, offers to record the method in the project's own docs, and stays blocked without an answer instead of guessing. It never declares PASS on receipts or passing tests alone - observed feature behavior decides.
+
 ## [0.0.9] - 2026-11-13
 
 ### Changed

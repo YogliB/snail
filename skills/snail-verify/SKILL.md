@@ -31,20 +31,21 @@ From the project working directory, run `node <skill-dir>/scripts/artifact-path.
     - If missing, read the project's existing documentation (README, CONTRIBUTING, docs/) for how to verify the project.
     - If still missing, read `.agents/verify/VERIFICATION.md` - a legacy project-level note: read it if it exists, never write or delete it. When it supplies the steps, offer to move them into the project's documentation.
 
-3. **Ask if nothing is known**
-    - If no steps are found after the reads above, ask: "What should I run or inspect to confirm these changes do what they aim and introduce no regressions?"
-    - Document the answer in the project's existing documentation (for example a Testing or Verification section in the README or CONTRIBUTING), unless it is already covered there. If no documentation file fits, ask the user where to record it - never create a competing standalone note.
+3. **Stop if verification is unclear**
+    - If no steps are found after the reads above, or it is not clear how to exercise the feature the way a user hits it, stop and ask: "What should I run or inspect to confirm these changes do what they aim and introduce no regressions?" Offer to document the agreed method in the project's own documentation (for example a Testing or Verification section in the README or CONTRIBUTING, agent docs, or a project skill - whatever fits the project), never in flow-internal files.
+    - Do not run the verification until the user answers. If there is no answer (the question is canceled or cannot be asked), stay stopped: report that verification is blocked on the user's answer and end there. Never guess a procedure.
+    - After the user answers, document the method where offered above, unless it is already covered there. If no documentation file fits, ask the user where to record it - never create a competing standalone note.
     - Do not write to the plan.
 
 4. **Exercise the feature**
-    - Run the change the way a user or agent will hit it, not just the test harness. Examples: run the CLI on real input and inspect what it writes; install the plugin and fire its hook through the real hook command; call the new API; serve the UI and hit the route.
+    - Run the change the way a user or agent will hit it, not just the test harness. Observed feature behavior is the verification; receipts and the report only record it. Examples: run the CLI on real input and inspect what it writes; install the plugin and fire its hook through the real hook command; call the new API; serve the UI and hit the route.
     - Use the plan's steps as the floor. If every step only proves the code compiles or tests pass, add the missing feature-level exercise yourself — that is the point of this skill.
     - Treat each step as a shell command when possible, and run it through the receipt runner bundled with `snail-implement` (`node scripts/run-with-receipt.mjs <dir>/receipts <label> -- <command>` in that skill's directory). A standalone install without `snail-implement` has no runner — run the commands directly and record command plus result in the report. Record each command's receipt path in the report; a step without a valid passing receipt did not pass.
     - Stop on the first failure and report it.
     - Do not auto-fix failures.
 
 5. **Report**
-    - Print the result of each step and an overall `PASS` or `FAIL`.
+    - Print the result of each step and an overall `PASS` or `FAIL`. Never declare `PASS` without observed feature behavior; receipts and passing tests alone do not pass.
     - If a feature path cannot be exercised in this environment (missing auth, external service, hardware), record the gap in the report instead of passing silently.
     - Write `5 - VERIFY.yaml` and `advance` only when every command passed; the gate refuses `--result=pass` that lacks valid receipts.
 

@@ -38,6 +38,8 @@ test('snail skill guards', () => {
 	assert.match(skill, /never guess a verification method/);
 	assert.match(skill, /Never declare PASS without observed feature behavior/);
 	assert.match(skill, /blocked on verification clarity/);
+	assert.match(skill, /one "yes" accepts all/);
+	assert.match(skill, /decision that changes what gets built/);
 });
 
 test('snail skill devin copy is in sync', () => {

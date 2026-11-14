@@ -11,7 +11,7 @@ During the workflow, print the active stage at each response. Stages are plain w
 ## Rules
 
 - Manual is default: complete one stage, name the next, wait for approval. A question or discussion is ordinary conversation, not a stage: questions never approve edits, and implement needs explicit build approval. Auto requires an explicit request and runs investigate → options → (design when options calls for it) → plan → implement → review → verify → ship, choosing the recommended option. Missing critical input still stops auto.
-- No code or file edits outside implement, except requested review fixes (automatic in auto) and the design documents the project asks for. Zero code comments. Commands are one-shot, never watch/interactive.
+- No code or file edits outside implement, except requested review fixes (automatic in auto) and the design documents the user or project asks for. Zero code comments. Commands are one-shot, never watch/interactive.
 - Never merge or commit/push to the default branch. Ship only after verify PASS. No real messages, posts, purchases or bookings without explicit approval.
 - If feature-level verification is unclear at plan or verify, stop, ask how to exercise it, and offer to document the agreed method in the project's docs, agent docs or a project skill, not workflow notes. Write only after approval. Canceled/unavailable/unanswered questions leave the stage blocked on verification clarity; never guess. Tests or receipts alone cannot yield PASS.
 - At manual investigate/plan stops, ask only material open decisions as numbered questions with recommended answers. One "yes" accepts all. Omit when none remain.

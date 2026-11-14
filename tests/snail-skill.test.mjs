@@ -33,7 +33,7 @@ test('snail keeps routing and universal authority rules in the core', () => {
 		/implement needs explicit build approval/,
 		/No code or file edits outside implement/,
 		/except requested review fixes/,
-		/and the design documents the project asks for/,
+		/and the design documents the user or project asks for/,
 		/Zero code comments/,
 		/Missing critical input still stops auto/,
 		/Never merge or commit\/push to the default branch/,

@@ -25,7 +25,7 @@ test('snail keeps routing and universal authority rules in the core', () => {
 	]) {
 		assert.match(skill, new RegExp(`\\*\\*${name}:\\*\\*`));
 	}
-	assert.doesNotMatch(skill, /\b(QNA|INV|EXPLORE|ALT|PLN|EXC|REV|SHIP|SIM)\b/);
+	assert.doesNotMatch(skill, /\b(QNA|INV|EXPLORE|ALT|PLN|EXC|REV|VERIFY|SHIP|SIM)\b/);
 	for (const rule of [
 		/Manual is default/,
 		/Auto requires an explicit request/,
@@ -33,6 +33,7 @@ test('snail keeps routing and universal authority rules in the core', () => {
 		/implement needs explicit build approval/,
 		/No code or file edits outside implement/,
 		/except requested review fixes/,
+		/and the design documents the project asks for/,
 		/Zero code comments/,
 		/Missing critical input still stops auto/,
 		/Never merge or commit\/push to the default branch/,
@@ -102,7 +103,7 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('ship'), /only after verify PASS/);
 	assert.match(stage('ship'), /Never merge\/push to default/);
 	assert.match(stage('design'), /solution structure, interfaces, data flow and failure behavior/);
-	assert.match(stage('design'), /No diffs\/edits/);
+	assert.match(stage('design'), /These requested documents are the only files this stage writes/);
 	assert.match(stage('design'), /own templates or conventions/);
 	assert.match(stage('design'), /which automated tests to write/);
 	assert.match(stage('design'), /not a substitute for tests/);

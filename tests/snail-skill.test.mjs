@@ -101,7 +101,20 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('review'), /three different models/);
 	assert.match(
 		stage('review'),
-		/identical prepared patch, file list, revision metadata and intent packet/,
+		/identical prepared patch, file list, revision metadata \(repository, pinned base and target SHAs, scope\) and intent packet/,
+	);
+	assert.match(stage('review'), /`git diff --binary <base> --` for the working tree/);
+	assert.match(stage('review'), /in-scope untracked files as labeled contents/);
+	assert.match(stage('review'), /never silently review a partial patch/);
+	assert.match(stage('review'), /invalidate the pass, recapture and re-dispatch/);
+	assert.match(
+		stage('review'),
+		/paste the full contract and input, never point reviewers at files they must discover/,
+	);
+	assert.match(stage('review'), /act on valid ones only/);
+	assert.match(
+		stage('review'),
+		/run the relevant checks after non-trivial fixes and record failures as blockers/,
 	);
 	assert.match(stage('review'), /never recompute the diff, choose another base, fix or post/);
 	assert.match(stage('review'), /one new reviewer per pass/);

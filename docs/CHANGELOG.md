@@ -4,6 +4,11 @@ All notable user-facing changes to snail are documented in this file.
 
 ## Unreleased
 
+### Added
+
+- In manual mode, the single `snail` skill now lists open decisions that change what gets built as numbered questions with recommended answers at the explore and planning stops, so a quick yes moves work forward.
+- The single `snail` skill treats a clear way to exercise the finished feature as part of a ready plan: when that is unclear it stops and asks, offers to record the agreed method in the project's own docs, stays blocked without an answer instead of guessing, and never declares PASS without observed feature behavior.
+
 ## [0.0.9] - 2026-11-13
 
 ### Changed

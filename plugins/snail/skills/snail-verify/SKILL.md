@@ -32,8 +32,8 @@ From the project working directory, run `node <skill-dir>/scripts/artifact-path.
     - If still missing, read `.agents/verify/VERIFICATION.md` - a legacy project-level note: read it if it exists, never write or delete it. When it supplies the steps, offer to move them into the project's documentation.
 
 3. **Stop if verification is unclear**
-    - If no steps are found after the reads above, or it is not clear how to exercise the feature the way a user hits it, stop and ask: "What should I run or inspect to confirm these changes do what they aim and introduce no regressions?" Offer to document the agreed method in the project's own documentation (for example a Testing or Verification section in the README or CONTRIBUTING, agent docs, or a project skill - whatever fits the project), never in flow-internal files.
-    - Do not run the verification until the user answers. If there is no answer (the question is canceled or cannot be asked), stay stopped: report that verification is blocked on the user's answer and end there. Never guess a procedure.
+    - If no steps are found after the reads above and you cannot determine from the diff how to exercise the feature the way a user hits it, stop and ask: "What should I run or inspect to confirm these changes do what they aim and introduce no regressions?" Offer to document the agreed method in the project's own documentation (for example a Testing or Verification section in the README or CONTRIBUTING, agent docs, or a project skill - whatever fits the project), never in flow-internal files.
+    - Do not run the verification until the user answers. If there is no answer (the question is canceled or cannot be asked), stay stopped: report that verification is blocked on the user's answer and end there. Never guess a procedure. In a snail-flow run, record the block with `note <dir> 'verify blocked: awaiting user answer'` and leave the flow at verify - do not `advance` and do not `--skip` (a skip lets the flow continue to PR unverified).
     - After the user answers, document the method where offered above, unless it is already covered there. If no documentation file fits, ask the user where to record it - never create a competing standalone note.
     - Do not write to the plan.
 
@@ -47,6 +47,6 @@ From the project working directory, run `node <skill-dir>/scripts/artifact-path.
 5. **Report**
     - Print the result of each step and an overall `PASS` or `FAIL`. Never declare `PASS` without observed feature behavior; receipts and passing tests alone do not pass.
     - If a feature path cannot be exercised in this environment (missing auth, external service, hardware), record the gap in the report instead of passing silently.
-    - Write `5 - VERIFY.yaml` and `advance` only when every command passed; the gate refuses `--result=pass` that lacks valid receipts.
+    - Write `5 - VERIFY.yaml` and `advance` only on an overall `PASS`; the gate refuses `--result=pass` that lacks valid receipts.
 
 Run this skill in a subagent when the harness supports it (a `size: light` flow may run it inline).

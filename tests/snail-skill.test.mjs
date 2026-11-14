@@ -90,9 +90,27 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('review'), /Read-only: report findings and stop/);
 	assert.match(
 		stage('review'),
-		/Only if fixes were requested or in auto: fix every finding and re-review/,
+		/Only if fixes were requested or in auto: fix every valid finding/,
 	);
 	assert.match(stage('review'), /same finding survives 3 passes/);
+	assert.match(stage('review'), /AI review\. harness: <harness>, model: <model>/);
+	assert.match(stage('review'), /Pin the comparison base to a commit/);
+	assert.match(stage('review'), /keep it for the whole run/);
+	assert.match(stage('review'), /recapture once against the same pinned base/);
+	assert.match(stage('review'), /three parallel read-only reviewer subagents/);
+	assert.match(stage('review'), /three different models/);
+	assert.match(
+		stage('review'),
+		/identical prepared patch, file list, revision metadata and intent packet/,
+	);
+	assert.match(stage('review'), /never recompute the diff, choose another base, fix or post/);
+	assert.match(stage('review'), /one new reviewer per pass/);
+	assert.match(stage('review'), /3 levels deep and 500 lines fetched in total/);
+	assert.match(stage('review'), /Never guess or invent a source's contents/);
+	assert.match(stage('review'), /never counted for the fix loop/);
+	assert.match(stage('review'), /label it valid, false_positive or unvalidated/);
+	assert.match(stage('review'), /`file:line \| tag \| original finding \| why it was dismissed`/);
+	assert.match(stage('review'), /line drift allowed/);
 	assert.match(stage('verify'), /PASS needs observed feature behavior/);
 	assert.match(stage('verify'), /never auto-fix/);
 	assert.match(

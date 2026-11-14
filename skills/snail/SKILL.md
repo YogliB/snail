@@ -72,7 +72,7 @@ Run commands one-shot; never watch mode, never interactive.
 
 - Exercise the change end-to-end the way a user hits it, not only the test suite.
 - No real-world side effects (messages, posts, purchases, bookings) without explicit user approval; exercise locally or against sandboxes.
-- Observed feature behavior decides; command output, logs and test results only support it. If you do not know how to exercise the feature the way a user hits it, stop - clarify with the user and offer to record the method in the project's own docs (never in workflow-internal notes), writing it only after the user approves the offer. If there is no answer (the question is canceled or cannot be asked), stay stopped and report the verification as blocked - never guess a method. Never declare PASS without observed feature behavior.
+- Observed feature behavior decides; command output, logs and test results only support it. If you do not know how to exercise the feature the way a user hits it, same stop as PLN - clarify with the user and stay blocked without an answer. Never declare PASS without observed feature behavior.
 - Report each step and an overall PASS, FAIL, or blocked; stop on the first failure.
 - Never auto-fix failures. SHIP only after a PASS.
 

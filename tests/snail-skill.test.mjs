@@ -109,13 +109,18 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('design'), /solution structure, interfaces, data flow and failure behavior/);
 	assert.match(stage('design'), /These requested documents are the only files this stage writes/);
 	assert.match(stage('design'), /template files alone are not a request/);
+	assert.match(stage('design'), /\$XDG_STATE_HOME\/snail\/templates/);
+	assert.match(stage('design'), /built-in templates under `templates\/`/);
+	for (const name of ['design.md', 'test-plan.md', 'security-privacy.md']) {
+		assert.ok(readFileSync(join(directory, 'templates', name), 'utf8').trim());
+	}
 	assert.match(stage('design'), /documented project convention/);
 	assert.match(stage('design'), /trust boundaries, permissions, sensitive data and abuse cases/);
 	assert.match(stage('design'), /which automated tests to write/);
 	assert.match(stage('design'), /not a substitute for tests/);
 	assert.match(
 		stage('design'),
-		/details live in project templates, never a fixed universal list/,
+		/details live in the resolved template, never a fixed universal list/,
 	);
 	assert.match(stage('design'), /shape the design before it is approved/);
 	assert.match(stage('review'), /check the work against them too/);
@@ -126,7 +131,11 @@ test('snail stage references preserve execution review verification and PR guard
 });
 
 test('snail core and all conditional references ship in the Devin copy', () => {
-	for (const path of ['SKILL.md', ...references.map((name) => `references/${name}`)]) {
+	for (const path of [
+		'SKILL.md',
+		...references.map((name) => `references/${name}`),
+		...['design.md', 'test-plan.md', 'security-privacy.md'].map((name) => `templates/${name}`),
+	]) {
 		assert.equal(
 			readFileSync(join(REPO_ROOT, 'plugins/snail/skills/snail', path), 'utf8'),
 			readFileSync(join(directory, path), 'utf8'),

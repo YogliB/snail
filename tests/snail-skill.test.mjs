@@ -105,10 +105,11 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('design'), /No diffs\/edits/);
 	assert.match(stage('design'), /own templates or conventions/);
 	assert.match(stage('design'), /which automated tests to write/);
-	assert.match(stage('design'), /browser tests for critical flows/);
-	assert.match(stage('design'), /DB\/service integration, API contract/);
 	assert.match(stage('design'), /not a substitute for tests/);
-	assert.match(stage('design'), /never a fixed checklist/);
+	assert.match(
+		stage('design'),
+		/details live in project templates, never a fixed universal list/,
+	);
 	assert.match(stage('design'), /shape the design before it is approved/);
 	assert.match(stage('review'), /check the work against them too/);
 	assert.match(stage('verify'), /execute it and report every gap/);

@@ -13,30 +13,30 @@ test('snail keeps routing and universal authority rules in the core', () => {
 	assert.match(skill, /^---\nname: snail\n/);
 	assert.match(skill, /description: .{20,}/);
 	for (const name of [
-		'QNA',
-		'INV',
-		'EXPLORE',
-		'ALT',
-		'PLN',
-		'EXC',
-		'REV',
-		'VERIFY',
-		'SHIP',
-		'SIM',
+		'investigate',
+		'options',
+		'design',
+		'plan',
+		'implement',
+		'review',
+		'verify',
+		'ship',
+		'simplify',
 	]) {
 		assert.match(skill, new RegExp(`\\*\\*${name}:\\*\\*`));
 	}
+	assert.doesNotMatch(skill, /\b(QNA|INV|EXPLORE|ALT|PLN|EXC|REV|SHIP|SIM)\b/);
 	for (const rule of [
 		/Manual is default/,
 		/Auto requires an explicit request/,
-		/Questions never approve edits/,
-		/EXC needs explicit build approval/,
-		/No code or file edits outside EXC/,
-		/except requested REV fixes/,
+		/questions never approve edits/,
+		/implement needs explicit build approval/,
+		/No code or file edits outside implement/,
+		/except requested review fixes/,
 		/Zero code comments/,
 		/Missing critical input still stops auto/,
 		/Never merge or commit\/push to the default branch/,
-		/SHIP only after VERIFY PASS/,
+		/Ship only after verify PASS/,
 		/No real messages, posts, purchases or bookings without explicit approval/,
 		/Canceled\/unavailable\/unanswered questions leave the stage blocked/,
 		/never guess/,
@@ -49,12 +49,18 @@ test('snail keeps routing and universal authority rules in the core', () => {
 		assert.match(skill, rule);
 });
 
+test('snail options stage judges whether design is needed', () => {
+	assert.match(skill, /Judge whether the work needs design/);
+	assert.match(skill, /solution structure, interfaces, data flow or failure behavior/);
+	assert.match(skill, /when it does not, go straight to plan/);
+	assert.match(skill, /user can always ask for design/);
+	assert.match(skill, /Enter only when options called for it or the user asked/);
+});
+
 test('snail loads only the active heavier stage from an installed relative path', () => {
 	assert.match(skill, /read that file only when entering the stage/);
 	assert.match(skill, /Paths are relative to this skill/);
 	assert.match(skill, /If a required reference cannot be read, stop and report it/);
-	for (const route of ['review → REV', 'verify → VERIFY', 'PR → SHIP', 'simplify → SIM'])
-		assert.ok(skill.includes(route));
 	const links = [
 		...new Set([...skill.matchAll(/`(references\/[^`]+)`/g)].map((match) => match[1])),
 	];
@@ -62,30 +68,41 @@ test('snail loads only the active heavier stage from an installed relative path'
 		links.sort(),
 		references.map((name) => `references/${name}`),
 	);
-	assert.deepEqual(references, ['exc.md', 'pln.md', 'rev.md', 'ship.md', 'verify.md']);
+	assert.deepEqual(references, [
+		'design.md',
+		'implement.md',
+		'plan.md',
+		'review.md',
+		'ship.md',
+		'verify.md',
+	]);
 	for (const link of links) assert.ok(readFileSync(join(directory, link), 'utf8').trim());
 });
 
 test('snail stage references preserve execution review verification and PR guards', () => {
-	assert.match(stage('pln'), /feature-level verification method/);
-	assert.match(stage('pln'), /Unclear verification means the plan is not ready/);
-	assert.match(stage('exc'), /Never commit\/push to default/);
-	assert.match(stage('exc'), /Run planned checks after each step/);
-	assert.match(stage('exc'), /following manual stops/);
-	assert.match(stage('rev'), /Read-only: report findings and stop/);
+	assert.match(stage('plan'), /feature-level verification method/);
+	assert.match(stage('plan'), /Unclear verification means the plan is not ready/);
+	assert.match(stage('plan'), /following the approved design when one exists/);
+	assert.match(stage('implement'), /Never commit\/push to default/);
+	assert.match(stage('implement'), /Run planned checks after each step/);
+	assert.match(stage('implement'), /following manual stops/);
+	assert.match(stage('review'), /Read-only: report findings and stop/);
 	assert.match(
-		stage('rev'),
+		stage('review'),
 		/Only if fixes were requested or in auto: fix every finding and re-review/,
 	);
-	assert.match(stage('rev'), /same finding survives 3 passes/);
+	assert.match(stage('review'), /same finding survives 3 passes/);
 	assert.match(stage('verify'), /PASS needs observed feature behavior/);
 	assert.match(stage('verify'), /never auto-fix/);
+	assert.match(stage('verify'), /Code changed after a FAIL goes back through review/);
 	assert.match(
 		stage('verify'),
 		/No real messages, posts, purchases or bookings without explicit approval/,
 	);
-	assert.match(stage('ship'), /only after VERIFY PASS/);
+	assert.match(stage('ship'), /only after verify PASS/);
 	assert.match(stage('ship'), /Never merge\/push to default/);
+	assert.match(stage('design'), /solution structure, interfaces, data flow and failure behavior/);
+	assert.match(stage('design'), /No diffs\/edits/);
 });
 
 test('snail core and all conditional references ship in the Devin copy', () => {

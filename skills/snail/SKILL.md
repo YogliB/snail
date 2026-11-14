@@ -6,7 +6,7 @@ description: Experimental single-skill workflow from investigation to PR, with a
 
 # snail
 
-Print the active stage at each response. Stages are plain words: investigate, options, design, plan, implement, review, verify, ship, simplify. A work request naming no stage starts at investigate.
+During the workflow, print the active stage at each response. Stages are plain words: investigate, options, design, plan, implement, review, verify, ship, simplify. A work request naming no stage starts at investigate.
 
 ## Rules
 
@@ -20,7 +20,7 @@ Print the active stage at each response. Stages are plain words: investigate, op
 
 For linked stages, read that file only when entering the stage. Paths are relative to this skill. If a required reference cannot be read, stop and report it; never guess its rules.
 
-- **investigate:** understand the goal, what counts as success and what is out of scope; summarize relevant existing files, patterns, constraints, questions and risks, and how the result can be exercised. Ask only about gaps that change the solution, and keep it short for a small clear request. No solutions, diffs or edits.
+- **investigate:** understand the goal, what counts as success and what is out of scope; summarize relevant existing files, patterns, constraints, questions and risks, and how the result can be exercised. For a defect, reproduce it and rank likely root causes and next steps. Ask only about gaps that change the solution, and keep it short for a small clear request. No solutions, diffs or edits.
 - **options:** up to 3 options, each with an idea, tiny code preview and pros/cons; recommend one. Judge whether the work needs design - real decisions about solution structure, interfaces, data flow or failure behavior - and say why in one sentence; when it does not, go straight to plan. The user can always ask for design. Manual waits for the selection and the design call; auto decides both. No diffs/edits.
 - **design:** read `references/design.md`. Enter only when options called for it or the user asked.
 - **plan:** read `references/plan.md`.

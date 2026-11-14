@@ -95,7 +95,11 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('review'), /same finding survives 3 passes/);
 	assert.match(stage('verify'), /PASS needs observed feature behavior/);
 	assert.match(stage('verify'), /never auto-fix/);
-	assert.match(stage('verify'), /Code changed after a FAIL goes back through review/);
+	assert.match(
+		stage('verify'),
+		/Fixes after a FAIL happen in implement with explicit build approval/,
+	);
+	assert.match(stage('verify'), /the delta goes back through review, then verify runs again/);
 	assert.match(
 		stage('verify'),
 		/No real messages, posts, purchases or bookings without explicit approval/,
@@ -104,7 +108,9 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('ship'), /Never merge\/push to default/);
 	assert.match(stage('design'), /solution structure, interfaces, data flow and failure behavior/);
 	assert.match(stage('design'), /These requested documents are the only files this stage writes/);
-	assert.match(stage('design'), /own templates or conventions/);
+	assert.match(stage('design'), /template files alone are not a request/);
+	assert.match(stage('design'), /documented project convention/);
+	assert.match(stage('design'), /trust boundaries, permissions, sensitive data and abuse cases/);
 	assert.match(stage('design'), /which automated tests to write/);
 	assert.match(stage('design'), /not a substitute for tests/);
 	assert.match(
@@ -113,7 +119,10 @@ test('snail stage references preserve execution review verification and PR guard
 	);
 	assert.match(stage('design'), /shape the design before it is approved/);
 	assert.match(stage('review'), /check the work against them too/);
-	assert.match(stage('verify'), /execute it and report every gap/);
+	assert.match(stage('verify'), /report every step's result/);
+	assert.match(stage('verify'), /report the remaining steps as not run/);
+	assert.match(stage('review'), /the project picks the tool, snail requires none/);
+	assert.match(skill, /For a defect, reproduce it and rank likely root causes and next steps/);
 });
 
 test('snail core and all conditional references ship in the Devin copy', () => {

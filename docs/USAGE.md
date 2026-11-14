@@ -88,7 +88,7 @@ Installed a single skill with `npx skills add`? Drop the prefix: `/snail-plannin
 
 ### Experimental: one skill for the whole workflow
 
-`snail` is a single short skill covering the same stages in plain words (investigate, options, design, plan, implement, review, verify, ship, simplify), picked up from plain language - no keywords to memorize. Questions are ordinary conversation, not a stage, and never approve code edits. The options stage also judges whether a separate design pass is needed; design runs only when needed or asked for, and can produce separate test-plan and security/privacy documents when the project asks for them. `manual` (default) stops for approval at each stage and never edits code until you approve the build; `auto` runs the whole chain, only when you ask. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
+`snail` is a single short skill covering the same end-to-end workflow in plain words (investigate, options, design, plan, implement, review, verify, ship, simplify), picked up from plain language - no keywords to memorize. Questions are ordinary conversation, not a stage, and never approve code edits. The options stage also judges whether a separate design pass is needed; design runs only when needed or asked for, and can produce separate test-plan and security/privacy documents when the user or the project explicitly asks for them. `manual` (default) stops for approval at each stage and never edits code until you approve the build; `auto` runs the whole chain, only when you ask. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
 
 ```text
 /snail:snail add-user-auth

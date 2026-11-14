@@ -9,6 +9,11 @@ All notable user-facing changes to snail are documented in this file.
 - In manual mode, the single `snail` skill now lists open decisions that change what gets built as numbered questions with recommended answers at the explore and planning stops, so a quick yes moves work forward.
 - The single `snail` skill treats a clear way to exercise the finished feature as part of a ready plan: when that is unclear it stops and asks, offers to record the agreed method in the project's own docs, stays blocked without an answer instead of guessing, and never declares PASS without observed feature behavior.
 
+### Changed
+
+- `snail-verify` now stops before running anything when it is not clear how to exercise the feature the way a user hits it: it asks, offers to record the method in the project's own docs, and stays blocked without an answer instead of guessing. It never declares PASS on receipts or passing tests alone - observed feature behavior decides.
+- `snail-flow` now halts at the verify stage when verification is unclear or awaits a user answer, instead of skipping ahead to the PR; environmental blocks (missing credentials, services, or environments) can still be skipped with a note.
+
 ## [0.0.9] - 2026-11-13
 
 ### Changed

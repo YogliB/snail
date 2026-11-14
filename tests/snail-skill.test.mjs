@@ -111,6 +111,7 @@ test('snail stage references preserve execution review verification and PR guard
 	assert.match(stage('design'), /template files alone are not a request/);
 	assert.match(stage('design'), /\$XDG_STATE_HOME\/snail\/templates/);
 	assert.match(stage('design'), /built-in templates under `templates\/`/);
+	assert.match(stage('design'), /The user can always name a different template for the task/);
 	for (const name of ['design.md', 'test-plan.md', 'security-privacy.md']) {
 		assert.ok(readFileSync(join(directory, 'templates', name), 'utf8').trim());
 	}

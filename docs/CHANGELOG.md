@@ -10,6 +10,12 @@ All notable user-facing changes to snail are documented in this file.
 
 - The single `snail` skill starts with shorter shared instructions and loads stage details only when needed.
 
+- The single `snail` skill names its stages in plain words - investigate, options, design, plan, implement, review, verify, ship, simplify - instead of abbreviations like PLN and EXC. Questions are ordinary conversation rather than a stage, and still never approve code edits.
+- The options stage judges whether the work needs a separate design pass and says why in one sentence; design runs only when needed or asked for, and weighs the design's security and privacy risks either way.
+- When the user or the project explicitly asks, the design stage also writes separate test-plan and security/privacy documents where the project keeps its docs, following the user's templates in the snail directory under the XDG state path when present, and the built-in minimal templates otherwise. The test plan covers both the automated tests to write and how the finished feature is exercised; the choice of tests stays with the project, never a fixed list.
+- For security-sensitive changes, review can run a security audit with the project's chosen tool on the change before verification; no specific tool is required.
+- Code changed after a failed verification is fixed in implement, then the delta goes back through review before re-verification.
+
 ## [0.0.11] - 2026-11-14
 
 ### Added

@@ -88,7 +88,7 @@ Installed a single skill with `npx skills add`? Drop the prefix: `/snail-plannin
 
 ### Experimental: one skill for the whole workflow
 
-`snail` is a single short skill covering the same stages (QNA, INV, EXPLORE, ALT, PLN, EXC, REV, VERIFY, SHIP, SIM), picked up from plain language — no keywords to memorize. `manual` (default) stops for approval at each stage and never edits code until you approve the build; `auto` runs the whole chain, only when you ask. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
+`snail` is a single short skill covering the same end-to-end workflow in plain words (investigate, options, design, plan, implement, review, verify, ship, simplify), picked up from plain language - no keywords to memorize. Questions are ordinary conversation, not a stage, and never approve code edits. The options stage also judges whether a separate design pass is needed; design runs only when needed or asked for, and can produce separate test-plan and security/privacy documents when the user or the project explicitly asks for them. `manual` (default) stops for approval at each stage and never edits code until you approve the build; `auto` runs the whole chain, only when you ask. Invoke it as `/snail:snail` from the plugin, or `/snail` after `npx skills add YogliB/snail --skill snail`:
 
 ```text
 /snail:snail add-user-auth
@@ -96,7 +96,7 @@ Installed a single skill with `npx skills add`? Drop the prefix: `/snail-plannin
 /snail:snail review this diff
 ```
 
-The skill keeps routing and shared safety rules in `SKILL.md`. Planning, execution, review, verification, and PR details load from skill-relative `references/` files only when entering those stages. Short questions and exploration do not need those files. This reduces initial reading, not necessarily total tokens across a complete run.
+The skill keeps routing and shared safety rules in `SKILL.md`. Design, planning, implementation, review, verification, and PR details load from skill-relative `references/` files only when entering those stages. Short questions and investigation do not need those files. This reduces initial reading, not necessarily total tokens across a complete run.
 
 Run one workflow per task — this skill alone or the `snail-*` skills, never mixed — and record time, tokens, interventions, and outcome to compare the two.
 

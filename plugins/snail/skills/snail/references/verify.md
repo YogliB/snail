@@ -1,3 +1,3 @@
-# VERIFY
+# verify
 
-exercise end-to-end user behavior, not just tests. No real messages, posts, purchases or bookings without explicit approval; use local/sandbox checks. Report each step and overall PASS/FAIL/blocked; first failure stops, never auto-fix. PASS needs observed feature behavior; logs/tests only support it.
+exercise end-to-end user behavior, not just tests. No real messages, posts, purchases or bookings without explicit approval; use local/sandbox checks. Report each step and overall PASS/FAIL/blocked; first failure stops, never auto-fix. When the project has a test plan, execute it in order and report every step's result; on a failure, stop and report the remaining steps as not run. Fixes after a FAIL happen in implement with explicit build approval (automatic in auto); the delta goes back through review, then verify runs again. PASS needs observed feature behavior; logs/tests only support it.

@@ -95,6 +95,8 @@ for (const root of roots) {
 			/under Known validation gaps and the artifact’s `validation_gaps`/,
 			/Code fixes alone do not trigger source refetching/,
 			/none resolved` alone only when no references were found/,
+			/"none resolved" only when no references were found; otherwise retain lookup gaps/,
+			/summary \(`none resolved` only when no references were found; otherwise retain lookup gaps\)/,
 			/Shared context: <prepared source identities/,
 			/do not independently repeat ticket\/epic\/spec retrieval/,
 			/Read additional source only to fill a specific remaining review gap/,

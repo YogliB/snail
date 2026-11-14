@@ -10,7 +10,7 @@ All notable user-facing changes to snail are documented in this file.
 
 - The single `snail` skill starts with shorter shared instructions and loads stage details only when needed.
 
-- The single `snail` skill names its stages in plain words - investigate, options, design, plan, implement, review, verify, ship, simplify - instead of abbreviations like PLN and EXC. Questions are ordinary conversation rather than a stage, and still never approve code edits. The options stage now judges whether the work needs a separate design pass and says why in one sentence; design runs only when needed or asked for, and code changed after a failed verification goes back through review before re-verification.
+- The single `snail` skill names its stages in plain words - investigate, options, design, plan, implement, review, verify, ship, simplify - instead of abbreviations like PLN and EXC. Questions are ordinary conversation rather than a stage, and still never approve code edits. The options stage now judges whether the work needs a separate design pass and says why in one sentence; design runs only when needed or asked for, and code changed after a failed verification goes back through review before re-verification. When the project asks for them, the design stage also produces separate test-plan and security/privacy documents following the project's own templates; review then checks the work against them and verify executes the test plan and reports gaps.
 
 ## [0.0.11] - 2026-11-14
 

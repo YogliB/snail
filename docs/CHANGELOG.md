@@ -6,6 +6,8 @@ All notable user-facing changes to snail are documented in this file.
 
 ### Changed
 
+- Code reviewers share prepared requirements and linked-ticket excerpts, avoiding repeated context retrieval across reviewers and fix passes.
+
 - The single `snail` skill starts with shorter shared instructions and loads stage details only when needed.
 
 ## [0.0.11] - 2026-11-14

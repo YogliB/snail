@@ -66,7 +66,7 @@ Rows run in order; `advance` refuses to move until the row's artifact exists and
 | `6`  | PR                  | `6 - PR.yaml`             | none                                       |
 
 - Receipts are YAML written by `node ../snail-implement/scripts/run-with-receipt.mjs <dir>/receipts <label> -- <command>` and cited relative to the flow dir (`receipts/<file>`). A check without a valid passing receipt did not happen.
-- **Skip row 5** (verification blocked): `advance <dir> --skip --note=<reason>` — the only skippable row. Anything else needs `set` as a repair.
+- **Skip row 5** (verification environmentally blocked - credentials, services, environment; a block awaiting a user answer halts instead, see stage 11): `advance <dir> --skip --note=<reason>` — the only skippable row. Anything else needs `set` as a repair.
 - **Redo a row**: `set <dir> at=<row>` (and `set <dir> status=in-progress` if the flow had completed). The next `advance` overwrites that row's recorded fields.
 - **Multi-PR work**: no initiative machinery. Write the split in the plan, then run one normal flow per PR (`snail-<slug>` each); sequence them by hand.
 - **Light path**: rows `2`, `3`, `5`, `6` only. A short `2 - PLANNING.yaml` (goal, files, steps, the check command per step) is enough — no `snail-planning` template or lint. The light path may run its phases inline in one worker.
@@ -96,7 +96,7 @@ Never reduce a phase to "write `<N> - <NAME>.yaml`" or a checklist of artifacts.
 8. (manual) Ask to continue.
 9. **Review** — `snail-review` in **fix mode**, called explicitly ("run snail-review in fix mode"); `snail-review` read-only only if the user asked for it. Writes `4 - REVIEW.yaml`; advances row `4`.
 10. (manual) Ask to continue.
-11. **Verify** — `snail-verify` is required unless the agent is blocked (e.g. verification needs credentials, services, or an environment it cannot reach). Writes `5 - VERIFY.yaml` and advances row `5`; when blocked, write no report — `advance <dir> --skip --note=<reason>` (the reason lives in the runbook) and continue.
+11. **Verify** — `snail-verify` is required unless the agent is blocked (e.g. verification needs credentials, services, or an environment it cannot reach). Writes `5 - VERIFY.yaml` and advances row `5`. When verification is blocked because how to verify is unclear or it awaits a user answer, the flow halts at verify: ensure the worker's block is recorded (`note <dir> 'verify blocked: awaiting user answer'` and `set <dir> status=blocked` per `snail-verify`), surface the question to the user, write no report, do not `advance` and do not `--skip` - the flow continues only after the user answers (`set <dir> status=in-progress`, then re-run verify). When blocked environmentally (credentials, services, or an environment the agent cannot reach), write no report - `advance <dir> --skip --note=<reason>` (the reason lives in the runbook) and continue.
 12. (manual) Ask to continue.
 13. **PR** — `snail-pr`. Writes `6 - PR.yaml`; advances row `6`, completing the flow.
 

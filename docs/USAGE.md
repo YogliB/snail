@@ -138,7 +138,7 @@ Every flow is a self-contained folder:
 | 2   | `snail-planning`     | `2 - PLANNING.yaml`       | Internal plan review converges (`valid=0`), decision `proceed`.  |
 | 3   | `snail-implement`    | `3 - IMPLEMENTATION.yaml` | Passing receipts for the per-step checks.                        |
 | 4   | `snail-review`       | `4 - REVIEW.yaml`         | Valid findings resolved (`valid=0`).                             |
-| 5   | `snail-verify`       | `5 - VERIFY.yaml`         | `--result=pass` + receipts; `--skip --note=<reason>` if blocked. |
+| 5   | `snail-verify`       | `5 - VERIFY.yaml`         | `--result=pass` + receipts; blocked awaiting a user answer: `note` + `set status=blocked`, never skip; environmental block: `--skip --note=<reason>`. |
 | 6   | `snail-pr`           | `6 - PR.yaml`             | `advance` writes `at: done`, `status: completed`.                |
 
 ### Standalone entry

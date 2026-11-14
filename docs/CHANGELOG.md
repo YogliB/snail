@@ -4,6 +4,8 @@ All notable user-facing changes to snail are documented in this file.
 
 ## Unreleased
 
+## [0.0.11] - 2026-11-14
+
 ### Added
 
 - In manual mode, the single `snail` skill now lists open decisions that change what gets built as numbered questions with recommended answers at the explore and planning stops, so a quick yes moves work forward.

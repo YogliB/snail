@@ -96,6 +96,8 @@ Installed a single skill with `npx skills add`? Drop the prefix: `/snail-plannin
 /snail:snail review this diff
 ```
 
+The skill keeps routing and shared safety rules in `SKILL.md`. Planning, execution, review, verification, and PR details load from skill-relative `references/` files only when entering those stages. Short questions and exploration do not need those files. This reduces initial reading, not necessarily total tokens across a complete run.
+
 Run one workflow per task — this skill alone or the `snail-*` skills, never mixed — and record time, tokens, interventions, and outcome to compare the two.
 
 ## The flow
@@ -131,15 +133,15 @@ Every flow is a self-contained folder:
 
 ### Phases
 
-| #   | Skill                | Output                    | Gate                                                             |
-| --- | -------------------- | ------------------------- | ---------------------------------------------------------------- |
-| 0   | `snail-explore`      | `0 - EXPLORE.yaml`        | Artifact exists.                                                 |
-| 1   | `snail-alternatives` | `1 - ALTERNATIVES.yaml`   | Internal alternatives review runs clean; user picks an option.   |
-| 2   | `snail-planning`     | `2 - PLANNING.yaml`       | Internal plan review converges (`valid=0`), decision `proceed`.  |
-| 3   | `snail-implement`    | `3 - IMPLEMENTATION.yaml` | Passing receipts for the per-step checks.                        |
-| 4   | `snail-review`       | `4 - REVIEW.yaml`         | Valid findings resolved (`valid=0`).                             |
+| #   | Skill                | Output                    | Gate                                                                                                                                                  |
+| --- | -------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0   | `snail-explore`      | `0 - EXPLORE.yaml`        | Artifact exists.                                                                                                                                      |
+| 1   | `snail-alternatives` | `1 - ALTERNATIVES.yaml`   | Internal alternatives review runs clean; user picks an option.                                                                                        |
+| 2   | `snail-planning`     | `2 - PLANNING.yaml`       | Internal plan review converges (`valid=0`), decision `proceed`.                                                                                       |
+| 3   | `snail-implement`    | `3 - IMPLEMENTATION.yaml` | Passing receipts for the per-step checks.                                                                                                             |
+| 4   | `snail-review`       | `4 - REVIEW.yaml`         | Valid findings resolved (`valid=0`).                                                                                                                  |
 | 5   | `snail-verify`       | `5 - VERIFY.yaml`         | `--result=pass` + receipts; blocked awaiting a user answer: `note` + `set status=blocked`, never skip; environmental block: `--skip --note=<reason>`. |
-| 6   | `snail-pr`           | `6 - PR.yaml`             | `advance` writes `at: done`, `status: completed`.                |
+| 6   | `snail-pr`           | `6 - PR.yaml`             | `advance` writes `at: done`, `status: completed`.                                                                                                     |
 
 ### Standalone entry
 

@@ -21,7 +21,7 @@ snail is an AI workflow toolkit. The snail skills are the `snail` and `snail-*` 
 - `snail-project-docs` — Scaffold, audit, or nudge a project's documentation structure
 - `snail-review` — Code review of a diff, read-only by default or fix mode on explicit request
 - `snail-verify` — Verify that changes do what they aim to do and introduce no regressions
-- `snail` — One short skill for the whole workflow, from explore to PR, with user-approval stops or an auto mode
+- `snail` — Experimental single-skill workflow from investigation to PR, with approval stops or explicit auto mode
 
 <!-- skills:end -->
 

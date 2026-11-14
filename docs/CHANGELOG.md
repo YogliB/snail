@@ -4,6 +4,10 @@ All notable user-facing changes to snail are documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- The single `snail` skill starts with shorter shared instructions and loads stage details only when needed.
+
 ## [0.0.11] - 2026-11-14
 
 ### Added

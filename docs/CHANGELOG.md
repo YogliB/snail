@@ -6,6 +6,8 @@ All notable user-facing changes to snail are documented in this file.
 
 ### Changed
 
+- The single `snail` skill's review stage now uses the same review machinery as a standalone review: three parallel reviewers over one frozen diff on the first pass and one fresh reviewer on each re-review, a shared intent packet traced from linked tickets and specs, validity triage of every finding, false-positive memory across fix passes, and an `AI review. harness/model` disclosure line on every review output - without the standalone reports and intermediate files.
+
 - Code reviewers share prepared requirements and linked-ticket excerpts, avoiding repeated context retrieval across reviewers and fix passes.
 
 - The single `snail` skill starts with shorter shared instructions and loads stage details only when needed.

@@ -8,7 +8,7 @@ description: Code review of a diff, read-only by default or fix mode on explicit
 
 Diff review in two modes. The orchestrating agent runs the reviewer subagents and, in both modes, triages their findings itself: only `valid` ones are reported or fixed.
 
-- **Read-only (default):** run three parallel `readonly` `general-purpose` Task subagents on the same diff, triage, deliver the `valid` findings. Do not fix or loop.
+- **Read-only (default):** run three parallel read-only reviewer subagents on the same diff, triage, deliver the `valid` findings. Do not fix or loop. Prefer the `snail-reviewer` agent profile when the harness provides one; otherwise use `readonly` `general-purpose` Task subagents.
 - **Fix mode:** only when the user explicitly asks to fix (`snail-review fix`, `review and fix`, "fix the findings") or `snail-flow` step 9 explicitly calls it. Pass one runs the same three parallel reviewers as read-only mode; when `valid` findings remain, loop **fix → re-review** with one reviewer per pass until a pass has zero `valid` findings after triage.
 
 Never infer fix mode. When unsure, stay read-only. A PR link or an outside contributor's PR never switches to fix mode.
@@ -166,7 +166,7 @@ If the diff is empty, reply with `AI review. harness: <harness>, model: <model>`
 
 1. **Resolve scope** — repository, diff target, base branch, custom focus, out-of-scope exclusions, known validation gaps.
 2. **Prepare** — trace context and capture the diff once per the snapshot contract above; carry the identical patch, metadata and shared context into every reviewer prompt.
-3. **Dispatch three reviewers** — in one message, start three `readonly` `general-purpose` Task subagents with the same prompt. Use three different models if the harness supports per-invocation model overrides (orchestrator picks, e.g. fast, balanced, deep); otherwise run all three with the session default.
+3. **Dispatch three reviewers** — in one message, start three read-only reviewer subagents with the same prompt: the `snail-reviewer` agent profile when the harness provides one, otherwise `readonly` `general-purpose` Task subagents. Use three different models if the harness supports per-invocation model overrides (orchestrator picks, e.g. fast, balanced, deep); otherwise run all three with the session default.
 4. **Triage** — as above.
 5. **Display** — the disclosure header plus one `### Review Findings` block with only the `valid` findings, deduplicated by file:line:tag. If none remain, report `Lean & valid. Ship.`
 6. **Deliver** — display the block locally; post to a PR only under the posting rule below. Write `4 - REVIEW.yaml` from `../snail-flow/templates/4 - REVIEW.yaml` (including the intent sources summary and triage counts). When a runbook exists: if zero `valid` findings remain after triage, `node ../snail-flow/scripts/flow-state.mjs advance <dir> --result=clean --valid=0` (`--note=<reason>` when you departed from this skill or to record the review URL); if `valid` findings remain, do not advance — `note <dir> <N valid findings unresolved>` and leave the cursor for the user to decide (re-run in fix mode or accept the findings). On a `size: light` runbook row `4` does not exist: write no `4 - REVIEW.yaml`; a review there needs the user to switch the flow to `size: full`. Do not fix.
@@ -176,7 +176,7 @@ If the diff is empty, reply with `AI review. harness: <harness>, model: <model>`
 If the diff is empty, stop in one sentence. The disclosure header goes on the final report and `4 - REVIEW.yaml`.
 
 1. **Prepare** — trace context once and capture the first diff snapshot before dispatch. Carry the prepared shared context into every pass. Recompute the patch once after each fix batch against the same pinned base, including staged, unstaged and in-scope untracked edits.
-2. **Review** — pass one: dispatch three reviewers exactly as read-only mode step 3 (one message, same prompt, three models when the harness supports overrides). Later passes: dispatch ONE new `readonly` `general-purpose` Task subagent with the prompt above, on the current tree; supply the freshly prepared patch against the same pinned base, including fixes made since pass one. The reviewer must not regenerate it.
+2. **Review** — pass one: dispatch three reviewers exactly as read-only mode step 3 (one message, same prompt, three models when the harness supports overrides). Later passes: dispatch ONE new read-only reviewer subagent — the `snail-reviewer` agent profile when the harness provides one, otherwise a `readonly` `general-purpose` Task subagent — with the prompt above, on the current tree; supply the freshly prepared patch against the same pinned base, including fixes made since pass one. The reviewer must not regenerate it.
 3. **Triage** — as above.
 4. **Fix** — resolve every `valid` finding before the next review, per the fix rules in `references/review-core.md`. Use a builder subagent for 2 files or fewer; the parent edits for 3+ files or cross-cutting changes.
 5. **Repeat** — dispatch a new subagent on the current tree. Carry forward every `false_positive` in the core record shape into the next prompt. Continue until the exit rule in `references/review-core.md` is met; when its stuck guard fires, `note <dir> <reason>` (and `set <dir> status=blocked`) and report the blocker.

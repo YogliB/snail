@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sync-devin-plugin: sync the canonical root skills/ and rules/ into the
+ * sync-devin-plugin: sync the canonical root skills/, rules/, and agents/ into the
  * Devin plugin, which must be self-contained: git-subdir installs fetch only
  * plugins/snail/, so a symlink to ../../skills never resolves there.
  *
@@ -56,9 +56,9 @@ for (const skill of artifactSkills) {
 	}
 }
 
-/** Copy skills/snail-* and rules/*.md into dst. Returns [skillCount, ruleCount]. */
+/** Copy skills/snail-*, rules/*.md, and agents/*.md into dst. Returns [skillCount, ruleCount, agentCount]. */
 function syncAll(dst) {
-	for (const sub of ['skills', 'rules']) {
+	for (const sub of ['skills', 'rules', 'agents']) {
 		rmSync(join(dst, sub), { recursive: true, force: true });
 		mkdirSync(join(dst, sub), { recursive: true });
 	}
@@ -75,7 +75,16 @@ function syncAll(dst) {
 		cpSync(join(root, 'rules', f), join(dst, 'rules', f));
 		rcount++;
 	}
-	return [count, rcount];
+	let acount = 0;
+	const agentDir = join(root, 'agents');
+	if (existsSync(agentDir)) {
+		for (const f of readdirSync(agentDir)) {
+			if (!f.endsWith('.md')) continue;
+			cpSync(join(agentDir, f), join(dst, 'agents', f));
+			acount++;
+		}
+	}
+	return [count, rcount, acount];
 }
 
 /** All files under dir, as relative paths. */
@@ -115,7 +124,7 @@ if (process.argv[2] === '--check') {
 	const tmp = mkdtempSync(join(tmpdir(), 'sync-devin-plugin-'));
 	syncAll(tmp);
 	let status = artifactDrift ? 1 : 0;
-	for (const sub of ['skills', 'rules']) {
+	for (const sub of ['skills', 'rules', 'agents']) {
 		const diff = dirDiff(join(tmp, sub), join(plugin, sub));
 		if (diff) {
 			console.error(`sync-devin-plugin: plugins/snail/${sub} is out of sync with ${sub}/:`);
@@ -128,5 +137,7 @@ if (process.argv[2] === '--check') {
 	process.exit(status);
 }
 
-const [count, rcount] = syncAll(plugin);
-console.log(`sync-devin-plugin: synced ${count} skills, ${rcount} rules to plugins/snail/`);
+const [count, rcount, acount] = syncAll(plugin);
+console.log(
+	`sync-devin-plugin: synced ${count} skills, ${rcount} rules, ${acount} agents to plugins/snail/`,
+);

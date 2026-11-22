@@ -13,6 +13,7 @@ A cross-agent toolkit: reusable skills, plus an optional multi-phase workflow on
 │   ├── snail-planning/         #   + lint-plan.mjs + plan templates
 │   └── snail-*/                #   explore, alternatives, review-*, verify, pr, ...
 ├── rules/                   # Shared rules, shipped in the Cursor and Devin plugins
+├── agents/                  # Named subagent profiles (snail-*), model-agnostic; synced into the Devin plugin
 ├── .cursor-plugin/          # Cursor manifest (repo root is the plugin)
 ├── .claude-plugin/          # Claude Code manifest
 ├── plugins/snail/           # Devin plugin — synced from root, never edited directly

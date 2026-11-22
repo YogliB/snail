@@ -45,7 +45,7 @@ nub run format
 | ------------------------------------ | ------------------------------------------------------------------- |
 | `node scripts/install.mjs`           | Install the Cursor plugin into `~/.cursor/plugins/local/`           |
 | `node scripts/uninstall.mjs`         | Remove the Cursor plugin                                            |
-| `node scripts/sync-devin-plugin.mjs` | Sync `skills/` and `rules/` into `plugins/snail/`                   |
+| `node scripts/sync-devin-plugin.mjs` | Sync `skills/`, `rules/`, and `agents/` into `plugins/snail/`       |
 | `node scripts/gen-skills-index.mjs`  | Regenerate the skill list in `rules/snail.md` (`--check` to verify) |
 | `node scripts/vendor-js-yaml.mjs`    | Refresh vendored js-yaml copies (`--check` to verify)               |
 | `nub run format`                     | Format with `oxfmt`                                                 |
@@ -56,10 +56,11 @@ nub run format
 
 - `skills/` — skills, source of truth for all agents.
 - `rules/` — shared rules shipped inside the Cursor and Devin plugins.
+- `agents/` — named `snail-*` subagent profiles (union frontmatter for cross-harness loading), synced into the Devin plugin.
 - External `<flow-root>/` — project-specific XDG state output (flow dirs `snail-*`, plus standalone `snail-review/`); not part of the repo layout.
 - `.cursor-plugin/` — Cursor plugin manifest; the repo root is the plugin.
 - `.claude-plugin/` — Claude Code plugin manifest.
-- `plugins/snail/` — Devin plugin (manifest, `skills/` and `rules/` synced from root).
+- `plugins/snail/` — Devin plugin (manifest, `skills/`, `rules/`, and `agents/` synced from root).
 - `scripts/` — repo scripts (install, uninstall, sync, index, vendoring), all Node 24+.
 - `tests/` — the `node --test` suite for the scripts and gates.
 - `docs/` — contributor and user documentation.
